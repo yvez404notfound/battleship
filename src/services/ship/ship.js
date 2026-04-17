@@ -90,11 +90,13 @@ const createDestroyer = function () {
 };
 //#endregion
 
+/* 
 const submarine = createSubmarine();
 submarine.setCoordinates([new Cell("A1"), new Cell("A2"), new Cell("A3")]);
 submarine.hit();
 console.log(submarine);
-console.log("submarine sunk: ", submarine.isSunk());
+console.log("submarine sunk: ", submarine.isSunk()); 
+*/
 
 export {
 	createAircraftCarrier,
