@@ -9,7 +9,6 @@
 		"build": "webpack --config webpack.prod.js",
 		"deploy": "git subtree push --prefix dist origin gh-pages"
 	},
-	"type": "module",
 	"keywords": [],
 	"author": "",
 	"license": "ISC",

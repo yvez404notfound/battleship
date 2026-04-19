@@ -11,8 +11,8 @@ class Cell {
 		this.occupiedByShip = ship;
 	}
 
-	setIsHit(bool) {
-		this.isHit = bool;
+	takeHit() {
+		this.isHit = true;
 	}
 }
 
