@@ -104,4 +104,5 @@ export {
 	createCruiser,
 	createDestroyer,
 	createSubmarine,
+	Ship,
 };
