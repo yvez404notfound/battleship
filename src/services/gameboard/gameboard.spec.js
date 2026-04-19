@@ -3,17 +3,20 @@ import Gameboard from "./gameboard.js";
 
 describe("Gameboard class unit tests", () => {
 	const gameboard = new Gameboard();
+	gameboard.initBoardCell();
 
 	test("should be able to place ship", () => {
-		gameboard.placeShip(createSubmarine(), ["A1", "A2", "A3"]);
-		const cellData = gameboard.getCell("A1");
-		expect(cellData.occupiedByShip.type).toBe("Submarine");
+		gameboard.placeShip(createSubmarine(), ["01", "02", "03"]);
+
+		const cell = gameboard.board[0][1];
+		expect(cell.occupiedByShip.type).toBe("Submarine");
 	});
 
 	test("should be able to receive attack", () => {
-		gameboard.receiveAttack("A1");
+		gameboard.receiveAttack("00");
+		const cell = gameboard.board[0][0];
 
-		expect(cellData.isHit).toBeTruthy();
-		expect(cellData.occupiedByShip.length).toBe(2);
+		expect(cell.isHit).toBeTruthy();
+		expect(cell.occupiedByShip.length).toBe(2);
 	});
 });
