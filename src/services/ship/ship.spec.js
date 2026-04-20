@@ -1,4 +1,4 @@
-import { createSubmarine } from "./ship";
+import { createSubmarine } from "./shipFactory.js";
 
 describe("Ship class test", () => {
 	const submarine = createSubmarine();

@@ -1,4 +1,4 @@
-import { createSubmarine } from "../ship/ship.js";
+import { createSubmarine } from "../ship/shipFactory.js";
 import Gameboard from "./gameboard.js";
 
 describe("Gameboard class unit tests", () => {
