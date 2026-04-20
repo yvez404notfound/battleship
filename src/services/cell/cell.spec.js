@@ -1,5 +1,6 @@
-import { createSubmarine, Ship } from "../../ship/ship";
-import Cell from "./cell";
+import Ship from "../ship/ship.js";
+import { createSubmarine } from "../ship/shipFactory.js";
+import Cell from "./cell.js";
 
 describe("Cell class unit test", () => {
 	const testCell = new Cell("A1");

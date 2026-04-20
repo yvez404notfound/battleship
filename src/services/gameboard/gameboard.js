@@ -1,5 +1,5 @@
-import { createSubmarine } from "../ship/ship.js";
-import Cell from "./cell/cell.js";
+import Cell from "../cell/cell.js";
+import { createSubmarine } from "../ship/shipFactory.js";
 
 class Gameboard {
 	board;
@@ -40,11 +40,13 @@ class Gameboard {
 
 const gameboardTest = new Gameboard("Yves");
 
+/* 
 gameboardTest.initBoardCell();
 console.log(gameboardTest.board);
 
 gameboardTest.receiveAttack("00");
 gameboardTest.placeShip();
-console.log(gameboardTest.board);
+console.log(gameboardTest.board); 
+*/
 
 export default Gameboard;
