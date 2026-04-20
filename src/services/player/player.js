@@ -1,6 +1,7 @@
 class Player {
 	ships = [];
 	recordedAttacks = [];
+	isMyTurn = false;
 
 	constructor(type, name, gameboard) {
 		this.type = type;
@@ -8,10 +9,10 @@ class Player {
 		this.gameboard = gameboard;
 	}
 
-	inject = function (method) {
-		Object.assign(this, method);
+	inject(method) {
+		Object.assign(this, method(this));
 		return this;
-	};
+	}
 }
 
 export default Player;

@@ -5,4 +5,16 @@ const attack = (state) => ({
 	},
 });
 
-export { attack };
+const endTurn = (state) => ({
+	endTurn() {
+		state.isMyTurn = false;
+	},
+});
+
+const startTurn = (state) => ({
+	startTurn() {
+		state.isMyTurn = true;
+	},
+});
+
+export { attack, endTurn, startTurn };
