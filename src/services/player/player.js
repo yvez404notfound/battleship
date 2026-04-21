@@ -1,7 +1,6 @@
 class Player {
 	ships = [];
 	recordedAttacks = [];
-	isMyTurn = false;
 
 	constructor(type, name, gameboard) {
 		this.type = type;

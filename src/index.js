@@ -1,4 +1,5 @@
-import "../src/services/gameboard/gameboard.js";
+// import "../src/services/gameboard/gameboard.js";
+import "../src/services/gameMaster/gameMaster.js";
 import "./assets/styles/modern-normalize.css";
 import "./index.css";
 

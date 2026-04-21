@@ -5,8 +5,8 @@ class Gameboard {
 	board;
 	length = 10;
 
-	constructor(assignedTo, ships) {
-		this.assignedTo = assignedTo;
+	constructor() {
+		this.initBoardCell();
 	}
 
 	initBoardCell = function () {
@@ -17,20 +17,16 @@ class Gameboard {
 
 	receiveAttack = function (position) {
 		const cell = this.board[position[0]][position[1]];
-		cell.setOccupiedByShip(createSubmarine());
-		const shipInCell = cell.occupiedByShip;
-
 		cell.takeHit();
+		// cell.setOccupiedByShip(createSubmarine());
+
+		const shipInCell = cell.occupiedByShip;
 		shipInCell.hit();
 	};
 
-	placeShip = function (
-		ship = createSubmarine(),
-		coordinates = ["00", "01", "03"],
-	) {
+	placeShip = function (ship, coordinates) {
 		coordinates.forEach((pos) => {
 			const cell = this.board[pos[0]][pos[1]];
-
 			cell.setOccupiedByShip(ship);
 		});
 
@@ -38,9 +34,8 @@ class Gameboard {
 	};
 }
 
-const gameboardTest = new Gameboard("Yves");
-
 /* 
+const gameboardTest = new Gameboard("Yves");
 gameboardTest.initBoardCell();
 console.log(gameboardTest.board);
 

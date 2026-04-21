@@ -1,20 +1,21 @@
+import { createShip } from "../ship/shipFactory.js";
+
 const attack = (state) => ({
-	attack(position, enemyGameBoard) {
+	attack(position, enemyGameboard) {
 		state.recordedAttacks.push(position);
-		enemyGameBoard.receiveAttack(position);
+		enemyGameboard.receiveAttack(position);
 	},
 });
 
-const endTurn = (state) => ({
-	endTurn() {
-		state.isMyTurn = false;
+const initShips = (state) => ({
+	initShips(shipsData) {
+		Object.entries(shipsData).forEach(([type, coordinates]) => {
+			const ship = createShip(type, coordinates);
+			state.ships.push(ship);
+
+			state.gameboard.placeShip(ship, ship.coordinates);
+		});
 	},
 });
 
-const startTurn = (state) => ({
-	startTurn() {
-		state.isMyTurn = true;
-	},
-});
-
-export { attack, endTurn, startTurn };
+export { attack, initShips };

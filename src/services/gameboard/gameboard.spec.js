@@ -3,10 +3,9 @@ import Gameboard from "./gameboard.js";
 
 describe("Gameboard class unit tests", () => {
 	const gameboard = new Gameboard();
-	gameboard.initBoardCell();
 
 	test("should be able to place ship", () => {
-		gameboard.placeShip(createSubmarine(), ["01", "02", "03"]);
+		gameboard.placeShip(createSubmarine(), ["00", "01", "02"]);
 
 		const cell = gameboard.board[0][1];
 		expect(cell.occupiedByShip.type).toBe("Submarine");
