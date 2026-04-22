@@ -1,0 +1,22 @@
+.primary-btn-filled {
+	border-radius: 0.5rem;
+	background-color: rgb(var(--primary));
+	color: rgb(var(--on-primary));
+	font-weight: bold;
+	margin: 2rem 0;
+	padding: 1rem 1.25rem;
+	width: fit-content;
+	display: flex;
+	gap: 0.5rem;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+	transition:
+		background-color 0.3s ease-in-out,
+		transform 0.3s ease-in;
+}
+
+.primary-btn-filled:hover {
+	background-color: hsl(from rgb(var(--primary)) h s 10%);
+	transform: scale(1.01);
+}
