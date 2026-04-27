@@ -1,0 +1,233 @@
+body.preparation {
+	display: block;
+}
+
+body.preparation > main {
+	margin: 4rem auto;
+}
+
+.header {
+	padding: 1rem 0;
+}
+
+.gamestate-header {
+	width: max-content;
+	margin: 0 auto;
+	margin-bottom: 2rem;
+}
+
+.gamestate-header > img {
+	max-height: 80px;
+}
+
+.gamestate-header > h2 {
+	font-size: 1.25rem;
+	color: rgb(var(--secondary));
+	text-align: center;
+}
+
+.preparation-editor {
+	display: grid;
+	gap: 1.5rem;
+}
+
+.name-field {
+	display: grid;
+	gap: 0.25rem;
+}
+
+.name-field > input {
+	width: 100%;
+	border: 1px solid rgb(var(--on-surface));
+	border-radius: 0.25rem;
+	padding: 0.25rem;
+}
+
+.ship-placement-editor {
+	display: grid;
+	gap: 0.5rem;
+}
+
+.ship-indicators {
+	display: flex;
+	justify-content: space-between;
+}
+
+.ships {
+	display: flex;
+	gap: 0.5rem;
+}
+
+.ship {
+	--ship-icon-size: 1.75rem;
+
+	max-width: calc(var(--ship-icon-size) * 1.75);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: start;
+}
+
+.ship > svg {
+	width: var(--ship-icon-size);
+	height: var(--ship-icon-size);
+}
+.ship > p {
+	font-size: 10px;
+	text-align: center;
+	color: rgb(var(--outline));
+}
+
+.ship svg path {
+	fill: rgb(var(--outline));
+	opacity: 80%;
+}
+
+.helper-btns {
+	--button-size: 2.75rem;
+
+	display: flex;
+	gap: 0.5rem;
+}
+
+.helper-btns > button {
+	min-width: var(--button-size);
+	max-height: var(--button-size);
+	padding: 0 0.25rem;
+	flex-direction: column;
+	font-size: 11px;
+	gap: 0.25rem;
+}
+
+.helper-btns > button > span:first-child {
+	font-size: 11px;
+}
+
+.gameboard {
+	--size: 300px;
+
+	margin: 0 auto;
+	width: var(--size);
+	height: var(--size);
+	min-height: auto;
+	display: grid;
+	grid-template-columns: repeat(10, 1fr);
+	grid-template-rows: repeat(10, 1fr);
+	background-image: url("../../assets/imgs/grid/oceangrid.png");
+	background-size: contain;
+}
+
+.gameboard:hover {
+	cursor: pointer;
+}
+
+.confirm-preparation {
+	font-size: 1.25rem;
+	margin: auto;
+}
+
+@media (width >= 26.5rem) {
+	.gameboard {
+		--size: 380px;
+	}
+}
+
+@media (width >= 33.25rem) {
+	body.preparation > main {
+		width: 70dvw;
+	}
+
+	.gameboard {
+		--size: 70dvw;
+	}
+}
+
+@media (width >= 40rem) {
+	body.preparation > main {
+		width: 60dvw;
+	}
+
+	.gameboard {
+		--size: 60dvw;
+	}
+}
+
+@media (width >= 48rem) {
+	body.preparation {
+		height: fit-content;
+	}
+
+	body.preparation > main {
+		width: 50dvw;
+	}
+
+	.gameboard {
+		--size: 50dvw;
+	}
+
+	.helper-btns {
+		--button-size: 3rem;
+	}
+
+	.helper-btns > button {
+		font-size: 0.75rem;
+	}
+
+	.helper-btns > button > span:first-child {
+		font-size: 0.75rem;
+	}
+
+	.ship {
+		--ship-icon-size: 2rem;
+	}
+
+	.ship p {
+		font-size: 0.75rem;
+	}
+}
+
+@media (width >= 64rem) {
+	.helper-btns {
+		--button-size: 3.25rem;
+	}
+
+	.helper-btns > button {
+		gap: 0.5rem;
+	}
+
+	.ship {
+		--ship-icon-size: 2.5rem;
+	}
+
+	.ship p {
+		font-size: 0.75rem;
+	}
+
+	.confirm-preparation {
+		font-size: 1.75rem;
+	}
+}
+
+@media (width >= 80rem) {
+	body.preparation > main {
+		width: 40dvw;
+	}
+
+	.gameboard {
+		--size: 40dvw;
+	}
+
+	.helper-btns {
+		--button-size: 3.75rem;
+	}
+}
+
+@media (width >= 96rem) {
+	body.preparation > main {
+		width: 30dvw;
+	}
+
+	.gameboard {
+		--size: 30dvw;
+	}
+}

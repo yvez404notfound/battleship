@@ -23,7 +23,6 @@
 		0px 8px 16px rgba(0, 0, 0, 0.16), 0px 14px 20px rgba(0, 0, 0, 0.12);
 
 	font-family: var(--main-font), var(--fallback-fonts);
-
 	color: rgb(var(--on-surface));
 }
 
@@ -35,77 +34,6 @@ body {
 	align-items: center;
 	justify-content: center;
 	padding: 0 1rem;
+	overflow-y: scroll;
 }
-
-.hero {
-	display: grid;
-	justify-items: center;
-	gap: 0.75rem;
-}
-
-.hero-image {
-	display: grid;
-	justify-items: center;
-	gap: 0.25rem;
-}
-
-.hero-image > img:first-child {
-	max-height: 300px;
-}
-
-.hero-image > img:last-child {
-	max-width: 380px;
-}
-
-.header {
-	width: fit-content;
-}
-
-.hero .header h1 {
-	font-family: var(--display-font), var(--main-font), var(--fallback-fonts);
-	color: rgb(var(--primary));
-
-	font-size: 3rem;
-	text-align: center;
-	letter-spacing: 0.05em;
-}
-
-.hero .header p {
-	padding-top: 0.25rem;
-	font-weight: bold;
-	text-align: right;
-	color: rgb(var(--outline));
-}
-
-.start-game-btn {
-	margin: 3rem auto;
-	box-shadow: var(--elevation-2);
-}
-
-.start-game-btn:hover {
-	box-shadow: var(--elevation-3);
-}
-
-.start-game-btn > span {
-	font-size: 1.25rem;
-}
-
-@media (width >= 48rem) {
-	main {
-		width: 50dvw;
-	}
-
-	.hero-image > img:last-child {
-		max-width: 100%;
-	}
-
-	.hero .header h1 {
-		font-size: 3.25rem;
-	}
-}
-
-@media (width >= 64rem) {
-	.hero .header h1 {
-		font-size: 4.25rem;
-	}
-}
+/* ------------------------------------------- */

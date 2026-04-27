@@ -1,5 +1,6 @@
 p,
-h1 {
+h1,
+h2 {
 	margin: 0;
 	padding: 0;
 }
@@ -7,4 +8,9 @@ h1 {
 button {
 	border: none;
 	outline: none;
+}
+
+input {
+	outline: none;
+	border: none;
 }

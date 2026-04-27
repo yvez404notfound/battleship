@@ -7,6 +7,10 @@ settings:
 importers:
 
   .:
+    dependencies:
+      inline-svg:
+        specifier: ^2.2.3
+        version: 2.2.3
     devDependencies:
       '@babel/preset-env':
         specifier: ^7.29.2
@@ -1881,6 +1885,9 @@ packages:
 
   inherits@2.0.4:
     resolution: {integrity: sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==}
+
+  inline-svg@2.2.3:
+    resolution: {integrity: sha512-K6UEwWvvODBCWLM6TrWW/S+7TE8bp2C+rN8TP9GKsvnDQrVPokQD0IFdnHLXW2MfO1dWD6TSlhxf8OEnIfXpvg==}
 
   interpret@3.1.1:
     resolution: {integrity: sha512-6xwYfHbajpoF0xLW+iwLkhwgvLoZDfjYfoFNu8ftMoXINzwuymNLd9u/KmwtdT2GbR+/Cz66otEGEVVUHX9QLQ==}
@@ -5154,6 +5161,8 @@ snapshots:
   inherits@2.0.3: {}
 
   inherits@2.0.4: {}
+
+  inline-svg@2.2.3: {}
 
   interpret@3.1.1: {}
 
