@@ -10,6 +10,8 @@ const renderPreparationPage = function () {
 	bodyEl.classList.add("preparation");
 	bodyEl.classList.remove("start");
 
+	const boardPositions = Array.from({ length: 100 }, (_, i) => i);
+
 	return `
   		<header class="hero">
         <div class="header">
@@ -41,7 +43,7 @@ const renderPreparationPage = function () {
 
             <div class="ship-indicators">
               <div class="ships">
-                <div class="ship">
+                <div class="ship focused">
                   <img
                     class="svg"
                     src="${aircraftCarrierIcon}"
@@ -79,13 +81,13 @@ const renderPreparationPage = function () {
               </div>
 
               <div class="helper-btns">
-                <button class="secondary-btn-filled">
+                <button class="rotate-btn secondary-btn-filled">
                   <span class="material-symbols-outlined">
                     rotate_90_degrees_cw
                   </span>
                   <span>Rotate</span>
                 </button>
-                <button class="error-btn-tonal">
+                <button class="undo-btn error-btn-tonal">
                   <span class="material-symbols-outlined"> undo </span
                   ><span>Undo</span>
                 </button>
@@ -93,115 +95,13 @@ const renderPreparationPage = function () {
             </div>
 
             <div class="gameboard">
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
-              <div class="cell"></div>
+              ${boardPositions
+								.map((pos) => {
+									return `
+                    <div class="cell" data-position="${pos < 10 ? `0${pos}` : pos}"></div>
+                  `;
+								})
+								.join("")}
             </div>
           </div>
 

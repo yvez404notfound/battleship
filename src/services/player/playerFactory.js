@@ -1,18 +1,12 @@
 import Player from "./player.js";
-import { attack, endTurn, startTurn } from "./playerMethods.js";
+import { attack, initShips } from "./playerMethods.js";
 
-const createHumanPlayer = function (name) {
-	return new Player("human", name)
-		.inject(attack)
-		.inject(endTurn)
-		.inject(startTurn);
+const createHumanPlayer = function (name, gameboard) {
+	return new Player("human", name, gameboard).inject(attack).inject(initShips);
 };
 
-const createRobotPlayer = function () {
-	return new Player("robot", "bot")
-		.inject(attack)
-		.inject(endTurn)
-		.inject(startTurn);
+const createRobotPlayer = function (gameboard) {
+	return new Player("robot", "bot", gameboard).inject(attack).inject(initShips);
 };
 
 export { createHumanPlayer, createRobotPlayer };

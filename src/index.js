@@ -11,7 +11,7 @@ import DomHandler from "./services/dom/domHandler.js";
 
 const domHandler = new DomHandler();
 console.log(domHandler.currentState);
-domHandler.renderPage();
+domHandler.changeState("preparation");
 
 /*
 domHandler.changeState("preparation");
