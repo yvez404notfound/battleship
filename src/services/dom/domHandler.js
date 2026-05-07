@@ -138,7 +138,10 @@ class DomHandler {
 			cell.addEventListener("mouseenter", (e) => {
 				const position = e.target.dataset.position;
 
-				if (this.isCurrentShipPositionOutOfBounds(position)) return;
+				if (this.isCurrentShipPositionOutOfBounds(position)) {
+					console.log("You are out of bounds");
+					return;
+				}
 
 				this.renderCurrentShipToGameboard(position);
 			});
@@ -146,10 +149,7 @@ class DomHandler {
 			cell.addEventListener("mouseleave", (e) => {
 				const position = e.target.dataset.position;
 
-				if (this.isCurrentShipPositionOutOfBounds(position)) {
-					console.log("Ship out of bounds");
-					return;
-				}
+				if (this.isCurrentShipPositionOutOfBounds(position)) return;
 
 				if (position) this.destroyCurrentShipToGameboard(position);
 
@@ -179,9 +179,10 @@ class DomHandler {
 				position,
 				vertex,
 			);
-			return this.bodyEl.querySelector(
-				`.cell[data-position='${cellPos < 10 ? `0${cellPos}` : cellPos}']`,
-			);
+
+			console.log("Cell pos: ", cellPos);
+
+			return this.bodyEl.querySelector(`.cell[data-position='${cellPos}']`);
 		});
 		console.log("cells to be filled", cellsToBeFilled);
 
@@ -204,64 +205,46 @@ class DomHandler {
 			return this.calculateAxis(this.shipPlacementAxis, position, vertex);
 		});
 
-		console.log("Ship Position: ", shipPosition);
-
-		let isOutOfBounds = shipPosition.some((pos) =>
-			this.isPositionOutOfBounds(this.shipPlacementAxis, pos, position),
+		const isOutOfBounds = this.isPositionOutOfBounds(
+			this.shipPlacementAxis,
+			shipPosition,
+			position,
 		);
 
 		return isOutOfBounds;
 	};
 
-	isPositionOutOfBounds = function (axis, targetPos, midPos) {
-		const currentShipPositionVertices =
-			this.shipPositionVertices[this.currentShip];
+	isPositionOutOfBounds = function (axis, shipPos, midPos) {
+		const MIN = 0;
+		const MAX = 99;
 
-		const xEdges = [
-			Number(`${midPos[0]}0`) - 1,
-			Number(+midPos[0] + 1 + `0`) - 1,
-		];
-		const yEdges = [
-			Number(+midPos[0] + currentShipPositionVertices[0] + `${midPos[1]}`) - 1,
-			Number(
-				+midPos[0] +
-					currentShipPositionVertices[currentShipPositionVertices.length - 1] +
-					`${midPos[1]}`,
-			) + 1,
-		];
+		console.log("Am i out of bounds");
 
-		console.log("X Edges: ", yEdges);
-		console.log("Y Edges: ", yEdges);
+		const row = Number(midPos[0] + "0");
+		const col = Number(row + 10) - 1;
 
-		switch (axis) {
-			case "x":
-				return (
-					targetPos < xEdges[0] ||
-					targetPos > xEdges[1] ||
-					targetPos < 0 ||
-					targetPos > 99
-				);
-			case "y":
-				return (
-					targetPos < yEdges[0] ||
-					targetPos > yEdges[1] ||
-					targetPos < 0 ||
-					targetPos > 99
-				);
-			default:
-				return;
-		}
+		if (
+			(shipPos[0] < row || shipPos[shipPos.length - 1] > col) &&
+			this.shipPlacementAxis === "x"
+		)
+			return true;
+
+		if (shipPos[0] < MIN || shipPos[shipPos.length - 1] > MAX) return true;
+
+		return false;
 	};
 
 	calculateAxis = function (axis, position, vertex) {
-		switch (axis) {
-			case "x":
-				return +position + vertex;
-			case "y":
-				return `${+position[0] + vertex}${position[1]}`;
-			default:
-				return;
+		let pos;
+
+		if (axis === "x") {
+			pos = `${+position + vertex}`;
+		} else {
+			pos = `${+position[0] + vertex}${position[1]}`;
+			pos = Number(pos[0]) === 0 ? pos[1] : pos;
 		}
+
+		return pos < 10 && pos >= 0 ? `0${pos}` : pos;
 	};
 
 	destroyCurrentShipToGameboard = function (position) {
@@ -275,9 +258,7 @@ class DomHandler {
 				vertex,
 			);
 			// console.log("celpos: ", cellPos);
-			return this.bodyEl.querySelector(
-				`.cell[data-position='${cellPos < 10 ? `0${cellPos}` : cellPos}']`,
-			);
+			return this.bodyEl.querySelector(`.cell[data-position='${cellPos}']`);
 		});
 
 		cellsToBeFilled.forEach((cell) => {
