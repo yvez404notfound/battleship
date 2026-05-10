@@ -144,6 +144,17 @@ body.preparation > main {
 	overflow: hidden;
 }
 
+.cell.illegal {
+	position: relative;
+}
+
+.cell.cell.illegal::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background-color: rgba(var(--error) / 0.5);
+}
+
 .gameboard:hover {
 	cursor: pointer;
 }

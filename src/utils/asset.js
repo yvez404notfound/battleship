@@ -1,6 +1,6 @@
 import inlineSVGMin from "inline-svg";
 
-const convertAssetsToInlineSVG = function () {
+const convertAssetsToInlineSVG = () => {
 	inlineSVGMin.init({
 		svgSelector: "img.svg",
 		initClass: "",

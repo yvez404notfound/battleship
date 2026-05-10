@@ -46,32 +46,25 @@ class DomHandler {
 	currentShip = this.shipPlacementStates[this.shipPlacementIdx];
 	shipPlacementAxis = "x";
 
-	gameboardEdges = {
-		upper: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-		right: [9, 19, 29, 39, 49, 59, 69, 79, 89, 99],
-		left: [0, 10, 20, 30, 40, 50, 60, 60, 80, 90],
-		down: [90, 91, 92, 93, 94, 95, 96, 97, 98, 99],
-	};
-
 	constructor() {
 		this.bodyEl = document.querySelector("body");
 	}
 
-	changeState = function (newState) {
+	changeState(newState) {
 		if (!Object.values(this.#STATES).includes(newState))
 			throw new Error("That state doesn't exists");
 		this.currentState = newState;
 
 		this.renderPage();
-	};
+	}
 
-	updateCurrentShipState = function () {
+	updateCurrentShipState() {
 		if (this.shipPlacementIdx > this.shipPlacementStates.length - 1) return;
 		this.shipPlacementIdx++;
 		this.currentShip = this.shipPlacementStates[this.shipPlacementIdx];
-	};
+	}
 
-	renderPage = function () {
+	renderPage() {
 		switch (this.currentState) {
 			case this.#STATES.HOME:
 				this.initHome();
@@ -86,40 +79,34 @@ class DomHandler {
 				bodyEl.innerHTML = renderHome();
 				break;
 		}
-	};
+	}
 
-	initHome = function () {
+	initHome() {
 		this.bodyEl.innerHTML = renderHome();
 		this.addEventListenersToHome();
 		convertAssetsToInlineSVG();
-	};
+	}
 
-	addEventListenersToHome = function () {
+	addEventListenersToHome() {
 		const startGameBtnEl = this.bodyEl.querySelector(".start-game-btn");
 		startGameBtnEl.addEventListener("click", () => {
 			this.changeState("preparation");
 		});
-	};
+	}
 
-	initPreparationPage = function () {
+	initPreparationPage() {
 		this.bodyEl.innerHTML = renderPreparationPage();
 		this.addEventListenersToPreparationPage();
 		convertAssetsToInlineSVG();
-	};
+	}
 
-	addEventListenersToPreparationPage = function () {
+	addEventListenersToPreparationPage() {
 		const preparationEditorEl = this.bodyEl.querySelector(
 			".preparation-editor",
 		);
 
 		const nameInputEl = preparationEditorEl.querySelector("input[name='name']");
-		nameInputEl.addEventListener("input", (e) => {
-			this.userData.name = e.target.value;
-			//console.log(this.userData.name);
-		});
-
-		const shipIndicators =
-			preparationEditorEl.querySelectorAll(".ships > .ship");
+		nameInputEl.addEventListener("input", (e) => {});
 
 		const rotateBtn = preparationEditorEl.querySelector(".rotate-btn");
 		rotateBtn.addEventListener("click", () => {
@@ -132,109 +119,131 @@ class DomHandler {
 
 		gameboardCells.forEach((cell) => {
 			cell.addEventListener("click", (e) => {
-				this.recordCurrentShipData(e.target.dataset.position, shipIndicators);
+				let targetEl = e.target;
+
+				if (!targetEl.classList.contains("cell"))
+					targetEl = e.target.parentElement;
+
+				const position = targetEl.dataset.position;
+
+				console.log("Target el: ", e.target);
+
+				this.recordCurrentShipData(position);
 			});
 
 			cell.addEventListener("mouseenter", (e) => {
+				if (this.areAllShipsPlaced()) return;
+
 				const position = e.target.dataset.position;
-
-				if (this.isCurrentShipPositionOutOfBounds(position)) {
-					console.log("You are out of bounds");
-					return;
-				}
-
-				this.renderCurrentShipToGameboard(position);
+				this.renderCurrentShipToGameboard(position, "placeholder");
 			});
 
 			cell.addEventListener("mouseleave", (e) => {
+				if (this.areAllShipsPlaced()) return;
+
 				const position = e.target.dataset.position;
-
-				if (this.isCurrentShipPositionOutOfBounds(position)) return;
-
-				if (position) this.destroyCurrentShipToGameboard(position);
-
-				console.log("cursor left", e.target.dataset.position);
+				this.destroyCurrentShipToGameboard(position);
 			});
 		});
-	};
+	}
 
-	recordCurrentShipData = function (startingPosition, shipIndicators) {
-		if (this.shipPlacementIdx > this.shipPlacementStates.length - 1)
-			return alert("All ships are already placed.");
+	areAllShipsPlaced() {
+		return this.shipPlacementIdx > this.shipPlacementStates.length - 1;
+	}
 
-		this.userData.shipsData[this.currentShip] = startingPosition;
-		updateShipIndicators(shipIndicators, this.shipPlacementIdx);
+	recordCurrentShipData(position) {
+		if (this.areAllShipsPlaced()) return alert("All ships are already placed.");
 
-		this.updateCurrentShipState();
-		console.log("Current State: ", this);
-	};
-
-	renderCurrentShipToGameboard = function (position) {
 		const currentShipPositionVertices =
 			this.shipPositionVertices[this.currentShip];
+		let cellsToBeFilled = [];
+		let coordinates = [];
 
-		const cellsToBeFilled = currentShipPositionVertices.map((vertex) => {
+		for (let i = 0; i <= currentShipPositionVertices.length - 1; i++) {
+			const vertex = currentShipPositionVertices[i];
+
 			const cellPos = this.calculateAxis(
 				this.shipPlacementAxis,
 				position,
 				vertex,
 			);
 
-			console.log("Cell pos: ", cellPos);
+			if (this.isPositionOutOfBounds(cellPos, position))
+				return alert("This ship is out of bounds.");
 
-			return this.bodyEl.querySelector(`.cell[data-position='${cellPos}']`);
+			const cell = this.bodyEl.querySelector(
+				`.cell[data-position='${cellPos}']`,
+			);
+
+			cellsToBeFilled.push(cell);
+			coordinates.push(cellPos);
+		}
+
+		this.renderCurrentShipToGameboard(position, "ready");
+
+		this.updateShipIndicators(this.shipPlacementIdx);
+
+		this.userData.shipsData[this.currentShip] = coordinates;
+
+		this.updateCurrentShipState();
+		console.log("Current State: ", this);
+	}
+
+	renderCurrentShipToGameboard(position, state) {
+		let cellsToBeFilled = [];
+		const currentShipPositionVertices =
+			this.shipPositionVertices[this.currentShip];
+
+		currentShipPositionVertices.forEach((vertex) => {
+			const cellPos = this.calculateAxis(
+				this.shipPlacementAxis,
+				position,
+				vertex,
+			);
+
+			if (this.isPositionOutOfBounds(cellPos, position)) {
+				cellsToBeFilled.push(null);
+				return;
+			}
+
+			cellsToBeFilled.push(
+				this.bodyEl.querySelector(`.cell[data-position='${cellPos}']`),
+			);
 		});
-		console.log("cells to be filled", cellsToBeFilled);
 
 		const imgSpritePaths = SHIP[this.currentShip];
 		const imgSpriteClass = `ship-sprite ${this.shipPlacementAxis}`;
+		const isOutOfBounds = cellsToBeFilled.includes(null);
 
+		// Add the ship sprite to cells
 		cellsToBeFilled.forEach((cell, i) => {
+			if (cell === null) return;
+
+			if (isOutOfBounds) cell.classList.add("illegal");
+			cell.classList.add(state);
+
 			const img = document.createElement("img");
 			img.classList = imgSpriteClass;
 			img.src = imgSpritePaths[i];
 			cell.appendChild(img);
 		});
-	};
+	}
 
-	isCurrentShipPositionOutOfBounds = function (position) {
-		const currentShipPositionVertices =
-			this.shipPositionVertices[this.currentShip];
-
-		const shipPosition = currentShipPositionVertices.map((vertex) => {
-			return this.calculateAxis(this.shipPlacementAxis, position, vertex);
-		});
-
-		const isOutOfBounds = this.isPositionOutOfBounds(
-			this.shipPlacementAxis,
-			shipPosition,
-			position,
-		);
-
-		return isOutOfBounds;
-	};
-
-	isPositionOutOfBounds = function (axis, shipPos, midPos) {
+	isPositionOutOfBounds(targetPos, midPos) {
 		const MIN = 0;
 		const MAX = 99;
-
-		console.log("Am i out of bounds");
 
 		const row = Number(midPos[0] + "0");
 		const col = Number(row + 10) - 1;
 
-		if (
-			(shipPos[0] < row || shipPos[shipPos.length - 1] > col) &&
-			this.shipPlacementAxis === "x"
-		)
+		if ((targetPos < row || targetPos > col) && this.shipPlacementAxis === "x")
 			return true;
-
-		if (shipPos[0] < MIN || shipPos[shipPos.length - 1] > MAX) return true;
+		if (targetPos < MIN || targetPos > MAX) return true;
 
 		return false;
-	};
+	}
 
-	calculateAxis = function (axis, position, vertex) {
+	calculateAxis(axis, position, vertex) {
 		let pos;
 
 		if (axis === "x") {
@@ -245,34 +254,46 @@ class DomHandler {
 		}
 
 		return pos < 10 && pos >= 0 ? `0${pos}` : pos;
-	};
+	}
 
-	destroyCurrentShipToGameboard = function (position) {
+	destroyCurrentShipToGameboard(position) {
 		const currentShipPositionVertices =
 			this.shipPositionVertices[this.currentShip];
+		let cellsToBeDestroyed = [];
 
-		const cellsToBeFilled = currentShipPositionVertices.map((vertex) => {
+		currentShipPositionVertices.forEach((vertex) => {
 			const cellPos = this.calculateAxis(
 				this.shipPlacementAxis,
 				position,
 				vertex,
 			);
-			// console.log("celpos: ", cellPos);
-			return this.bodyEl.querySelector(`.cell[data-position='${cellPos}']`);
+
+			if (this.isPositionOutOfBounds(cellPos, position)) {
+				cellsToBeDestroyed.push(null);
+				return;
+			}
+
+			cellsToBeDestroyed.push(
+				this.bodyEl.querySelector(`.cell[data-position='${cellPos}']`),
+			);
 		});
 
-		cellsToBeFilled.forEach((cell) => {
+		cellsToBeDestroyed.forEach((cell) => {
+			if (cell === null || cell.classList.contains("ready")) return;
 			cell.innerHTML = "";
+			cell.classList.remove("illegal");
 		});
-	};
+	}
+
+	updateShipIndicators(idx) {
+		const shipIndicators = this.bodyEl.querySelectorAll(".ships > .ship");
+
+		const ship = shipIndicators[idx];
+		ship.classList.replace("focused", "placed");
+
+		const nextShip = ship.nextElementSibling;
+		if (nextShip !== null) nextShip.classList.add("focused");
+	}
 }
-
-const updateShipIndicators = function (shipIndicators, idx) {
-	const ship = shipIndicators[idx];
-	ship.classList.replace("focused", "placed");
-
-	const nextShip = ship.nextElementSibling;
-	if (nextShip !== null) nextShip.classList.add("focused");
-};
 
 export default DomHandler;
