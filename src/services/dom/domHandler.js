@@ -46,32 +46,25 @@ class DomHandler {
 	currentShip = this.shipPlacementStates[this.shipPlacementIdx];
 	shipPlacementAxis = "x";
 
-	gameboardEdges = {
-		upper: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-		right: [9, 19, 29, 39, 49, 59, 69, 79, 89, 99],
-		left: [0, 10, 20, 30, 40, 50, 60, 60, 80, 90],
-		down: [90, 91, 92, 93, 94, 95, 96, 97, 98, 99],
-	};
-
 	constructor() {
 		this.bodyEl = document.querySelector("body");
 	}
 
-	changeState = function (newState) {
+	changeState(newState) {
 		if (!Object.values(this.#STATES).includes(newState))
 			throw new Error("That state doesn't exists");
 		this.currentState = newState;
 
 		this.renderPage();
-	};
+	}
 
-	updateCurrentShipState = function () {
+	updateCurrentShipState() {
 		if (this.shipPlacementIdx > this.shipPlacementStates.length - 1) return;
 		this.shipPlacementIdx++;
 		this.currentShip = this.shipPlacementStates[this.shipPlacementIdx];
-	};
+	}
 
-	renderPage = function () {
+	renderPage() {
 		switch (this.currentState) {
 			case this.#STATES.HOME:
 				this.initHome();
@@ -86,40 +79,34 @@ class DomHandler {
 				bodyEl.innerHTML = renderHome();
 				break;
 		}
-	};
+	}
 
-	initHome = function () {
+	initHome() {
 		this.bodyEl.innerHTML = renderHome();
 		this.addEventListenersToHome();
 		convertAssetsToInlineSVG();
-	};
+	}
 
-	addEventListenersToHome = function () {
+	addEventListenersToHome() {
 		const startGameBtnEl = this.bodyEl.querySelector(".start-game-btn");
 		startGameBtnEl.addEventListener("click", () => {
 			this.changeState("preparation");
 		});
-	};
+	}
 
-	initPreparationPage = function () {
+	initPreparationPage() {
 		this.bodyEl.innerHTML = renderPreparationPage();
 		this.addEventListenersToPreparationPage();
 		convertAssetsToInlineSVG();
-	};
+	}
 
-	addEventListenersToPreparationPage = function () {
+	addEventListenersToPreparationPage() {
 		const preparationEditorEl = this.bodyEl.querySelector(
 			".preparation-editor",
 		);
 
 		const nameInputEl = preparationEditorEl.querySelector("input[name='name']");
-		nameInputEl.addEventListener("input", (e) => {
-			this.userData.name = e.target.value;
-			//console.log(this.userData.name);
-		});
-
-		const shipIndicators =
-			preparationEditorEl.querySelectorAll(".ships > .ship");
+		nameInputEl.addEventListener("input", (e) => {});
 
 		const rotateBtn = preparationEditorEl.querySelector(".rotate-btn");
 		rotateBtn.addEventListener("click", () => {
@@ -132,166 +119,181 @@ class DomHandler {
 
 		gameboardCells.forEach((cell) => {
 			cell.addEventListener("click", (e) => {
-				this.recordCurrentShipData(e.target.dataset.position, shipIndicators);
+				let targetEl = e.target;
+
+				if (!targetEl.classList.contains("cell"))
+					targetEl = e.target.parentElement;
+
+				const position = targetEl.dataset.position;
+
+				console.log("Target el: ", e.target);
+
+				this.recordCurrentShipData(position);
 			});
 
 			cell.addEventListener("mouseenter", (e) => {
+				if (this.areAllShipsPlaced()) return;
+
 				const position = e.target.dataset.position;
-
-				if (this.isCurrentShipPositionOutOfBounds(position)) return;
-
-				this.renderCurrentShipToGameboard(position);
+				this.renderCurrentShipToGameboard(position, "placeholder");
 			});
 
 			cell.addEventListener("mouseleave", (e) => {
+				if (this.areAllShipsPlaced()) return;
+
 				const position = e.target.dataset.position;
-
-				if (this.isCurrentShipPositionOutOfBounds(position)) {
-					console.log("Ship out of bounds");
-					return;
-				}
-
-				if (position) this.destroyCurrentShipToGameboard(position);
-
-				console.log("cursor left", e.target.dataset.position);
+				this.destroyCurrentShipToGameboard(position);
 			});
 		});
-	};
+	}
 
-	recordCurrentShipData = function (startingPosition, shipIndicators) {
-		if (this.shipPlacementIdx > this.shipPlacementStates.length - 1)
-			return alert("All ships are already placed.");
+	areAllShipsPlaced() {
+		return this.shipPlacementIdx > this.shipPlacementStates.length - 1;
+	}
 
-		this.userData.shipsData[this.currentShip] = startingPosition;
-		updateShipIndicators(shipIndicators, this.shipPlacementIdx);
+	recordCurrentShipData(position) {
+		if (this.areAllShipsPlaced()) return alert("All ships are already placed.");
 
-		this.updateCurrentShipState();
-		console.log("Current State: ", this);
-	};
-
-	renderCurrentShipToGameboard = function (position) {
 		const currentShipPositionVertices =
 			this.shipPositionVertices[this.currentShip];
+		let cellsToBeFilled = [];
+		let coordinates = [];
 
-		const cellsToBeFilled = currentShipPositionVertices.map((vertex) => {
+		for (let i = 0; i <= currentShipPositionVertices.length - 1; i++) {
+			const vertex = currentShipPositionVertices[i];
+
 			const cellPos = this.calculateAxis(
 				this.shipPlacementAxis,
 				position,
 				vertex,
 			);
-			return this.bodyEl.querySelector(
-				`.cell[data-position='${cellPos < 10 ? `0${cellPos}` : cellPos}']`,
+
+			if (this.isPositionOutOfBounds(cellPos, position))
+				return alert("This ship is out of bounds.");
+
+			const cell = this.bodyEl.querySelector(
+				`.cell[data-position='${cellPos}']`,
+			);
+
+			cellsToBeFilled.push(cell);
+			coordinates.push(cellPos);
+		}
+
+		this.renderCurrentShipToGameboard(position, "ready");
+
+		this.updateShipIndicators(this.shipPlacementIdx);
+
+		this.userData.shipsData[this.currentShip] = coordinates;
+
+		this.updateCurrentShipState();
+		console.log("Current State: ", this);
+	}
+
+	renderCurrentShipToGameboard(position, state) {
+		let cellsToBeFilled = [];
+		const currentShipPositionVertices =
+			this.shipPositionVertices[this.currentShip];
+
+		currentShipPositionVertices.forEach((vertex) => {
+			const cellPos = this.calculateAxis(
+				this.shipPlacementAxis,
+				position,
+				vertex,
+			);
+
+			if (this.isPositionOutOfBounds(cellPos, position)) {
+				cellsToBeFilled.push(null);
+				return;
+			}
+
+			cellsToBeFilled.push(
+				this.bodyEl.querySelector(`.cell[data-position='${cellPos}']`),
 			);
 		});
-		console.log("cells to be filled", cellsToBeFilled);
 
 		const imgSpritePaths = SHIP[this.currentShip];
 		const imgSpriteClass = `ship-sprite ${this.shipPlacementAxis}`;
+		const isOutOfBounds = cellsToBeFilled.includes(null);
 
+		// Add the ship sprite to cells
 		cellsToBeFilled.forEach((cell, i) => {
+			if (cell === null) return;
+
+			if (isOutOfBounds) cell.classList.add("illegal");
+			cell.classList.add(state);
+
 			const img = document.createElement("img");
 			img.classList = imgSpriteClass;
 			img.src = imgSpritePaths[i];
 			cell.appendChild(img);
 		});
-	};
+	}
 
-	isCurrentShipPositionOutOfBounds = function (position) {
-		const currentShipPositionVertices =
-			this.shipPositionVertices[this.currentShip];
+	isPositionOutOfBounds(targetPos, midPos) {
+		const MIN = 0;
+		const MAX = 99;
 
-		const shipPosition = currentShipPositionVertices.map((vertex) => {
-			return this.calculateAxis(this.shipPlacementAxis, position, vertex);
-		});
+		const row = Number(midPos[0] + "0");
+		const col = Number(row + 10) - 1;
 
-		console.log("Ship Position: ", shipPosition);
+		if ((targetPos < row || targetPos > col) && this.shipPlacementAxis === "x")
+			return true;
+		if (targetPos < MIN || targetPos > MAX) return true;
 
-		let isOutOfBounds = shipPosition.some((pos) =>
-			this.isPositionOutOfBounds(this.shipPlacementAxis, pos, position),
-		);
+		return false;
+	}
 
-		return isOutOfBounds;
-	};
+	calculateAxis(axis, position, vertex) {
+		let pos;
 
-	isPositionOutOfBounds = function (axis, targetPos, midPos) {
-		const currentShipPositionVertices =
-			this.shipPositionVertices[this.currentShip];
-
-		const xEdges = [
-			Number(`${midPos[0]}0`) - 1,
-			Number(+midPos[0] + 1 + `0`) - 1,
-		];
-		const yEdges = [
-			Number(+midPos[0] + currentShipPositionVertices[0] + `${midPos[1]}`) - 1,
-			Number(
-				+midPos[0] +
-					currentShipPositionVertices[currentShipPositionVertices.length - 1] +
-					`${midPos[1]}`,
-			) + 1,
-		];
-
-		console.log("X Edges: ", yEdges);
-		console.log("Y Edges: ", yEdges);
-
-		switch (axis) {
-			case "x":
-				return (
-					targetPos < xEdges[0] ||
-					targetPos > xEdges[1] ||
-					targetPos < 0 ||
-					targetPos > 99
-				);
-			case "y":
-				return (
-					targetPos < yEdges[0] ||
-					targetPos > yEdges[1] ||
-					targetPos < 0 ||
-					targetPos > 99
-				);
-			default:
-				return;
+		if (axis === "x") {
+			pos = `${+position + vertex}`;
+		} else {
+			pos = `${+position[0] + vertex}${position[1]}`;
+			pos = Number(pos[0]) === 0 ? pos[1] : pos;
 		}
-	};
 
-	calculateAxis = function (axis, position, vertex) {
-		switch (axis) {
-			case "x":
-				return +position + vertex;
-			case "y":
-				return `${+position[0] + vertex}${position[1]}`;
-			default:
-				return;
-		}
-	};
+		return pos < 10 && pos >= 0 ? `0${pos}` : pos;
+	}
 
-	destroyCurrentShipToGameboard = function (position) {
+	destroyCurrentShipToGameboard(position) {
 		const currentShipPositionVertices =
 			this.shipPositionVertices[this.currentShip];
+		let cellsToBeDestroyed = [];
 
-		const cellsToBeFilled = currentShipPositionVertices.map((vertex) => {
+		currentShipPositionVertices.forEach((vertex) => {
 			const cellPos = this.calculateAxis(
 				this.shipPlacementAxis,
 				position,
 				vertex,
 			);
-			// console.log("celpos: ", cellPos);
-			return this.bodyEl.querySelector(
-				`.cell[data-position='${cellPos < 10 ? `0${cellPos}` : cellPos}']`,
+
+			if (this.isPositionOutOfBounds(cellPos, position)) {
+				cellsToBeDestroyed.push(null);
+				return;
+			}
+
+			cellsToBeDestroyed.push(
+				this.bodyEl.querySelector(`.cell[data-position='${cellPos}']`),
 			);
 		});
 
-		cellsToBeFilled.forEach((cell) => {
+		cellsToBeDestroyed.forEach((cell) => {
+			if (cell === null || cell.classList.contains("ready")) return;
 			cell.innerHTML = "";
+			cell.classList.remove("illegal");
 		});
-	};
+	}
+
+	updateShipIndicators(idx) {
+		const shipIndicators = this.bodyEl.querySelectorAll(".ships > .ship");
+
+		const ship = shipIndicators[idx];
+		ship.classList.replace("focused", "placed");
+
+		const nextShip = ship.nextElementSibling;
+		if (nextShip !== null) nextShip.classList.add("focused");
+	}
 }
-
-const updateShipIndicators = function (shipIndicators, idx) {
-	const ship = shipIndicators[idx];
-	ship.classList.replace("focused", "placed");
-
-	const nextShip = ship.nextElementSibling;
-	if (nextShip !== null) nextShip.classList.add("focused");
-};
 
 export default DomHandler;
