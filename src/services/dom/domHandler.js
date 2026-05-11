@@ -64,6 +64,12 @@ class DomHandler {
 		this.currentShip = this.shipPlacementStates[this.shipPlacementIdx];
 	}
 
+	undoCurrentShipState() {
+		if (this.shipPlacementIdx === 0) return;
+		this.shipPlacementIdx--;
+		this.currentShip = this.shipPlacementStates[this.shipPlacementIdx];
+	}
+
 	renderPage() {
 		switch (this.currentState) {
 			case this.#STATES.HOME:
@@ -114,6 +120,11 @@ class DomHandler {
 			console.log("Ship axis: ", this.shipPlacementAxis);
 		});
 
+		const undoBtn = preparationEditorEl.querySelector(".undo-btn");
+		undoBtn.addEventListener("click", () => {
+			this.undoShipPlacement();
+		});
+
 		const gameboardCells =
 			preparationEditorEl.querySelectorAll(".gameboard > .cell");
 
@@ -125,9 +136,6 @@ class DomHandler {
 					targetEl = e.target.parentElement;
 
 				const position = targetEl.dataset.position;
-
-				console.log("Target el: ", e.target);
-
 				this.recordCurrentShipData(position);
 			});
 
@@ -189,7 +197,7 @@ class DomHandler {
 		this.userData.shipsData[this.currentShip] = coordinates;
 
 		this.updateCurrentShipState();
-		console.log("Current State: ", this);
+		console.log("Ship location inserted: ", this.userData.shipsData);
 	}
 
 	renderCurrentShipToGameboard(position, state) {
@@ -310,7 +318,46 @@ class DomHandler {
 		ship.classList.replace("focused", "placed");
 
 		const nextShip = ship.nextElementSibling;
-		if (nextShip !== null) nextShip.classList.add("focused");
+		nextShip !== null && nextShip.classList.add("focused");
+	}
+
+	undoShipIndicators(idx) {
+		const shipIndicators = this.bodyEl.querySelectorAll(".ships > .ship");
+
+		const ship = shipIndicators[this.shipPlacementIdx];
+		ship.classList.remove("focused");
+
+		const previousShip = ship.previousElementSibling;
+
+		previousShip !== null &&
+			previousShip.classList.replace("placed", "focused");
+	}
+
+	destroyPlacedShips(shipLocations) {
+		let currentShipCoords = this.userData.shipsData[this.currentShip];
+
+		const shipLocCells = currentShipCoords.map((pos) => {
+			const cell = this.bodyEl.querySelector(`.cell[data-position="${pos}"]
+			`);
+
+			return cell;
+		});
+
+		shipLocCells.forEach((cell) => {
+			cell.innerHTML = "";
+			cell.classList.remove("placeholder", "ready");
+		});
+
+		this.userData.shipsData[this.currentShip] = [];
+	}
+
+	undoShipPlacement() {
+		if (this.shipPlacementIdx === 0) return;
+		this.undoShipIndicators();
+		this.undoCurrentShipState();
+		this.destroyPlacedShips();
+
+		console.log("Ship location removed: ", this.userData.shipsData);
 	}
 }
 
