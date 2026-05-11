@@ -179,6 +179,9 @@ class DomHandler {
 			coordinates.push(cellPos);
 		}
 
+		if (this.areCellsOccupied(cellsToBeFilled))
+			return alert("Coordinates already occupied by other ship.");
+
 		this.renderCurrentShipToGameboard(position, "ready");
 
 		this.updateShipIndicators(this.shipPlacementIdx);
@@ -214,13 +217,18 @@ class DomHandler {
 		const imgSpritePaths = SHIP[this.currentShip];
 		const imgSpriteClass = `ship-sprite ${this.shipPlacementAxis}`;
 		const isOutOfBounds = cellsToBeFilled.includes(null);
+		const areCellsOccupied = this.areCellsOccupied(cellsToBeFilled);
 
-		// Add the ship sprite to cells
 		cellsToBeFilled.forEach((cell, i) => {
 			if (cell === null) return;
 
-			if (isOutOfBounds) cell.classList.add("illegal");
+			const isCellReady = cell.classList.contains("ready");
+
 			cell.classList.add(state);
+			if ((areCellsOccupied && !isCellReady) || isOutOfBounds)
+				cell.classList.add("illegal");
+
+			if (isCellReady) cell.classList.remove("illegal");
 
 			const img = document.createElement("img");
 			img.classList = imgSpriteClass;
@@ -241,6 +249,16 @@ class DomHandler {
 		if (targetPos < MIN || targetPos > MAX) return true;
 
 		return false;
+	}
+
+	areCellsOccupied(cells) {
+		const hasChild = cells.some((cell) => {
+			if (cell === null) return;
+			const child = cell.querySelector("img");
+			if (child !== null) return cell.classList.contains("ready");
+		});
+
+		return hasChild;
 	}
 
 	calculateAxis(axis, position, vertex) {

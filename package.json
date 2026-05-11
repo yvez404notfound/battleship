@@ -15,6 +15,7 @@
 	"packageManager": "pnpm@10.16.1",
 	"devDependencies": {
 		"@babel/preset-env": "^7.29.2",
+		"baseline-browser-mapping": "^2.10.29",
 		"css-loader": "^7.1.2",
 		"html-loader": "^5.1.0",
 		"html-webpack-plugin": "^5.6.4",
