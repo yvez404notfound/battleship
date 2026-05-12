@@ -9,6 +9,15 @@ class DomHandler {
 		PREPARATION: "preparation",
 		GAME: "game",
 	});
+
+	SHIP_POSITION_VERTICES = {
+		aircraftCarrier: [-2, -1, 0, 1, 2],
+		battleship: [-1, 0, 1, 2],
+		cruiser: [-1, 0, 1],
+		submarine: [-1, 0, 1],
+		destroyer: [0, 1],
+	};
+
 	currentState = this.#STATES.HOME;
 
 	userData = {
@@ -20,25 +29,6 @@ class DomHandler {
 			submarine: [],
 			destroyer: [],
 		},
-	};
-
-	robotData = {
-		name: "robot",
-		shipsData: {
-			aircraftCarrier: [],
-			battleship: [],
-			cruiser: [],
-			submarine: [],
-			destroyer: [],
-		},
-	};
-
-	shipPositionVertices = {
-		aircraftCarrier: [-2, -1, 0, 1, 2],
-		battleship: [-1, 0, 1, 2],
-		cruiser: [-1, 0, 1],
-		submarine: [-1, 0, 1],
-		destroyer: [0, 1],
 	};
 
 	shipPlacementStates = Object.keys(this.userData.shipsData);
@@ -59,13 +49,16 @@ class DomHandler {
 	}
 
 	updateCurrentShipState() {
-		if (this.shipPlacementIdx > this.shipPlacementStates.length - 1) return;
+		const shipLength = this.shipPlacementStates.length - 1;
+		if (this.shipPlacementIdx >= shipLength) return;
+
 		this.shipPlacementIdx++;
 		this.currentShip = this.shipPlacementStates[this.shipPlacementIdx];
 	}
 
 	undoCurrentShipState() {
 		if (this.shipPlacementIdx === 0) return;
+
 		this.shipPlacementIdx--;
 		this.currentShip = this.shipPlacementStates[this.shipPlacementIdx];
 	}
@@ -79,7 +72,7 @@ class DomHandler {
 				this.initPreparationPage();
 				break;
 			case this.#STATES.GAME:
-				bodyEl.innerHTML = renderHome();
+				this.bodyEl.innerHTML = renderHome();
 				break;
 			default:
 				bodyEl.innerHTML = renderHome();
@@ -113,6 +106,9 @@ class DomHandler {
 
 		const nameInputEl = preparationEditorEl.querySelector("input[name='name']");
 		nameInputEl.addEventListener("input", (e) => {});
+		nameInputEl.setCustomValidity(
+			"We must know your name before we battle, Admiral.",
+		);
 
 		const rotateBtn = preparationEditorEl.querySelector(".rotate-btn");
 		rotateBtn.addEventListener("click", () => {
@@ -153,17 +149,30 @@ class DomHandler {
 				this.destroyCurrentShipToGameboard(position);
 			});
 		});
+
+		const confirmBtn = preparationEditorEl.querySelector(
+			".confirm-preparation",
+		);
+		confirmBtn.addEventListener("click", () => {
+			if (!this.areAllShipsPlaced()) return alert("Place all the ships first.");
+			if (nameInputEl.value === "") return nameInputEl.reportValidity();
+
+			console.log("Ready for Battle");
+
+			this.changeState("game");
+		});
 	}
 
 	areAllShipsPlaced() {
-		return this.shipPlacementIdx > this.shipPlacementStates.length - 1;
+		const shipsData = Object.values(this.userData.shipsData);
+		return shipsData[shipsData.length - 1].length > 0;
 	}
 
 	recordCurrentShipData(position) {
 		if (this.areAllShipsPlaced()) return alert("All ships are already placed.");
 
 		const currentShipPositionVertices =
-			this.shipPositionVertices[this.currentShip];
+			this.SHIP_POSITION_VERTICES[this.currentShip];
 		let cellsToBeFilled = [];
 		let coordinates = [];
 
@@ -203,7 +212,7 @@ class DomHandler {
 	renderCurrentShipToGameboard(position, state) {
 		let cellsToBeFilled = [];
 		const currentShipPositionVertices =
-			this.shipPositionVertices[this.currentShip];
+			this.SHIP_POSITION_VERTICES[this.currentShip];
 
 		currentShipPositionVertices.forEach((vertex) => {
 			const cellPos = this.calculateAxis(
@@ -284,7 +293,7 @@ class DomHandler {
 
 	destroyCurrentShipToGameboard(position) {
 		const currentShipPositionVertices =
-			this.shipPositionVertices[this.currentShip];
+			this.SHIP_POSITION_VERTICES[this.currentShip];
 		let cellsToBeDestroyed = [];
 
 		currentShipPositionVertices.forEach((vertex) => {
@@ -307,7 +316,7 @@ class DomHandler {
 		cellsToBeDestroyed.forEach((cell) => {
 			if (cell === null || cell.classList.contains("ready")) return;
 			cell.innerHTML = "";
-			cell.classList.remove("illegal");
+			cell.classList.remove("illegal", "placeholder");
 		});
 	}
 
@@ -318,18 +327,20 @@ class DomHandler {
 		ship.classList.replace("focused", "placed");
 
 		const nextShip = ship.nextElementSibling;
-		nextShip !== null && nextShip.classList.add("focused");
+		if (nextShip !== null) nextShip.classList.add("focused");
 	}
 
 	undoShipIndicators(idx) {
 		const shipIndicators = this.bodyEl.querySelectorAll(".ships > .ship");
 
+		console.log(this.shipPlacementIdx);
+
 		const ship = shipIndicators[this.shipPlacementIdx];
-		ship.classList.remove("focused");
+		ship.classList.remove("focused", "placed");
 
 		const previousShip = ship.previousElementSibling;
 
-		previousShip !== null &&
+		if (previousShip !== null)
 			previousShip.classList.replace("placed", "focused");
 	}
 

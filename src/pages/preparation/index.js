@@ -81,13 +81,13 @@ const renderPreparationPage = function () {
               </div>
 
               <div class="helper-btns">
-                <button class="rotate-btn secondary-btn-filled">
+                <button class="rotate-btn secondary-btn-filled" type="button">
                   <span class="material-symbols-outlined">
                     rotate_90_degrees_cw
                   </span>
                   <span>Rotate</span>
                 </button>
-                <button class="undo-btn error-btn-tonal">
+                <button class="undo-btn error-btn-tonal" type="button">
                   <span class="material-symbols-outlined"> undo </span
                   ><span>Undo</span>
                 </button>
