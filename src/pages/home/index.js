@@ -1,10 +1,7 @@
 import battleShipImg from "../../assets/imgs/battleship-hero-img.png";
 import wavesImg from "../../assets/imgs/waves.svg";
 
-const renderHome = function () {
-	const bodyEl = document.querySelector("body");
-	bodyEl.classList.add("start");
-
+const homepageUI = () => {
 	return `
   		<main>
 			<header class="hero">
@@ -29,4 +26,4 @@ const renderHome = function () {
   `;
 };
 
-export { renderHome };
+export default homepageUI;

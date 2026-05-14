@@ -7,13 +7,17 @@ import "./index.css";
 import "./pages/home/home.css";
 import "./pages/preparation/preparation.css";
 
-import DomHandler from "./services/dom/domHandler.js";
+import ScreenManager from "./services/dom/screenManager/screenManager.js";
 
+/*
 const domHandler = new DomHandler();
 console.log(domHandler.currentState);
 domHandler.changeState("preparation");
 
-/*
+
 domHandler.changeState("preparation");
 console.log(domHandler.currentState);
 */
+
+// const screenManager = new ScreenManager();
+ScreenManager.renderCurrentPage();

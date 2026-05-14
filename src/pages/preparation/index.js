@@ -5,11 +5,7 @@ import destroyerIcon from "../../assets/imgs/ships/destroyer.svg";
 import submarineIcon from "../../assets/imgs/ships/submarine.svg";
 import strategyIcon from "../../assets/imgs/strategy-icon.svg";
 
-const renderPreparationPage = function () {
-	const bodyEl = document.querySelector("body");
-	bodyEl.classList.add("preparation");
-	bodyEl.classList.remove("start");
-
+const preparationPageUI = function () {
 	const boardPositions = Array.from({ length: 100 }, (_, i) => i);
 
 	return `
@@ -112,4 +108,4 @@ const renderPreparationPage = function () {
   `;
 };
 
-export { renderPreparationPage };
+export default preparationPageUI;
