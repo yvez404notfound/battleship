@@ -1,0 +1,118 @@
+body.game {
+	height: auto;
+
+	main {
+		margin: 3rem 0;
+	}
+
+	.player-game-info {
+		display: grid;
+		gap: 0.5rem;
+
+		div:first-child {
+			display: flex;
+			width: 100%;
+			justify-content: space-between;
+
+			span:first-child {
+				--text-size: 1rem;
+
+				font-size: var(--text-size);
+				display: flex;
+				align-items: center;
+
+				span:first-child {
+					font-size: calc(var(--text-size) * 1.5) !important;
+				}
+			}
+
+			.forfeit-btn {
+				--btn-size: 0.75rem;
+
+				font-size: var(--btn-size);
+				padding: 0.5rem 0.5rem;
+				gap: 0.25rem;
+
+				span {
+					font-size: calc(var(--btn-size) * 1.25) !important;
+				}
+			}
+		}
+
+		.gameboard {
+			border-radius: 2px;
+		}
+
+		.ships-indicator {
+			--ship-size: 1.75rem;
+
+			display: flex;
+			gap: 0.5rem;
+
+			.ship {
+				height: var(--ship-size);
+				width: var(--ship-size);
+			}
+		}
+	}
+
+	.players-game-info {
+		display: grid;
+		gap: 2rem;
+		place-items: center;
+
+		.versus-symbol {
+			height: 120px;
+		}
+	}
+
+	@media (width >= var(--c-xs)) {
+		.gameboard {
+			--size: 320px;
+		}
+	}
+
+	/* Gameboard Sizes */
+	.gameboard {
+		@media (width >= 26.5rem) {
+			--size: 360px;
+		}
+
+		@media (width >= 80rem) {
+			--size: 420px;
+		}
+	}
+
+	@media (width >= 80rem) {
+		main {
+			width: fit-content;
+		}
+
+		.players-game-info {
+			display: flex;
+		}
+
+		.player-game-info {
+			div:first-child {
+				span:first-child {
+					font-size: 1.25rem;
+					gap: 0.5rem;
+				}
+
+				.forfeit-btn {
+					--btn-size: 1rem;
+				}
+			}
+
+			.ships-indicator {
+				--ship-size: 2rem;
+			}
+		}
+
+		footer {
+			position: absolute;
+			left: 0;
+			bottom: 0;
+		}
+	}
+}
