@@ -1,4 +1,5 @@
 import { convertAssetsToInlineSVG } from "../../../utils/asset";
+import GameHandler from "../gameHandler/gameHandler";
 import HomepageHandler from "../homepageHandler/homepageHandler";
 import PreparationHandler from "../preparationHandler/preparationHandler";
 
@@ -6,10 +7,10 @@ class ScreenManager {
 	static STATES = {
 		HOME: new HomepageHandler(),
 		PREPARATION: new PreparationHandler(),
-		GAME: "game",
+		GAME: new GameHandler(),
 	};
 
-	static currentState = ScreenManager.STATES.HOME;
+	static currentState = ScreenManager.STATES.PREPARATION;
 
 	constructor() {}
 

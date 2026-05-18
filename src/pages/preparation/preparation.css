@@ -1,29 +1,30 @@
 body.preparation {
-	display: block;
+	margin: 0;
+	display: flex;
+	flex-direction: column;
 
 	/* Descendants ⬇️ */
 	main {
-		display: block;
-	}
-
-	.header {
-		padding: 1rem 0;
+		flex: 1;
+		width: fit-content;
+		display: grid;
+		margin: 2rem 0;
 	}
 
 	.gamestate-header {
 		width: max-content;
 		margin: 0 auto;
 		margin-bottom: 2rem;
-	}
 
-	.gamestate-header > img {
-		max-height: 80px;
-	}
+		& > img {
+			max-height: 80px;
+		}
 
-	.gamestate-header > h2 {
-		font-size: 1.25rem;
-		color: rgb(var(--secondary));
-		text-align: center;
+		& > h2 {
+			font-size: 1.25rem;
+			color: rgb(var(--secondary));
+			text-align: center;
+		}
 	}
 
 	.preparation-editor {
@@ -46,57 +47,94 @@ body.preparation {
 	.ship-placement-editor {
 		display: grid;
 		gap: 0.5rem;
+
+		.gameboard {
+			--size: 280px;
+
+			@media (width >= 23rem) {
+				--size: 300px;
+			}
+
+			@media (width >= 32rem) {
+				--size: 320px;
+			}
+
+			@media (width >= 48rem) {
+				--size: 340px;
+			}
+
+			@media (width >= 64rem) {
+				--size: 360px;
+			}
+
+			@media (width >= 80rem) {
+				--size: 380px;
+			}
+
+			@media (width >= 96rem) {
+				--size: 400px;
+			}
+		}
 	}
 
 	.ship-indicators {
 		display: flex;
+		flex-direction: column;
 		justify-content: space-between;
 	}
 
 	.ships {
 		display: flex;
 		gap: 0.5rem;
-	}
 
-	.ship {
-		--ship-icon-size: 1.75rem;
+		& > .ship {
+			--ship-icon-size: 1.75rem;
 
-		max-width: calc(var(--ship-icon-size) * 1.75);
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: start;
-	}
+			max-width: calc(var(--ship-icon-size) * 1.75);
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: start;
 
-	.ship > svg {
-		width: var(--ship-icon-size);
-		height: var(--ship-icon-size);
-	}
-	.ship > p {
-		font-size: 10px;
-		text-align: center;
-		color: rgb(var(--outline));
-	}
+			svg {
+				width: var(--ship-icon-size);
+				height: var(--ship-icon-size);
 
-	.ship svg path {
-		fill: rgb(var(--outline));
-		opacity: 80%;
-	}
+				path {
+					fill: rgb(var(--outline));
+					opacity: 80%;
+				}
+			}
 
-	.ship.focused svg path {
-		fill: rgb(var(--primary));
-		opacity: 100%;
-	}
+			p {
+				font-size: 10px;
+				text-align: center;
+				color: rgb(var(--outline));
+			}
+		}
 
-	.ship.focused > p,
-	.ship.placed > p {
-		color: rgb(var(--primary));
-	}
+		& > .ship.focused {
+			svg path {
+				fill: rgb(var(--primary));
+				opacity: 100%;
+			}
 
-	.ship.placed svg path {
-		fill: rgb(var(--success));
-		opacity: 100%;
-		box-shadow: var(--elevation-5);
+			p {
+				color: rgb(var(--primary));
+			}
+		}
+
+		& > .ship.placed {
+			svg path {
+				fill: rgb(var(--success));
+				opacity: 100%;
+				box-shadow: var(--elevation-5);
+			}
+
+			p {
+				color: rgb(var(--primary));
+			}
+		}
 	}
 
 	.helper-btns {
@@ -104,59 +142,20 @@ body.preparation {
 
 		display: flex;
 		gap: 0.5rem;
-	}
+		justify-content: flex-end;
 
-	.helper-btns > button {
-		min-width: var(--button-size);
-		max-height: var(--button-size);
-		padding: 0 0.25rem;
-		flex-direction: column;
-		font-size: 11px;
-		gap: 0.25rem;
-	}
+		& > button {
+			min-width: var(--button-size);
+			max-height: var(--button-size);
+			padding: 0.25rem 0.25rem;
+			flex-direction: column;
+			font-size: 11px;
+			gap: 0.25rem;
 
-	.helper-btns > button > span:first-child {
-		font-size: 11px;
-	}
-
-	.gameboard {
-		--size: 300px;
-
-		margin: 0 auto;
-		width: var(--size);
-		height: var(--size);
-		min-height: auto;
-		display: grid;
-		grid-template-columns: repeat(10, 1fr);
-		grid-template-rows: repeat(10, 1fr);
-		background-image: url("../../assets/imgs/grid/oceangrid1.png");
-		background-size: cover;
-	}
-
-	.gameboard > * {
-		border-right: 1px solid #3f6ca6;
-		border-bottom: 1px solid #3f6ca6;
-	}
-
-	.gameboard .cell {
-		background-color: none;
-		/* border: 0.5px solid rgb(var(--outline-variant)); */
-		overflow: hidden;
-	}
-
-	.cell.illegal {
-		position: relative;
-	}
-
-	.cell.cell.illegal::after {
-		content: "";
-		position: absolute;
-		inset: 0;
-		background-color: rgba(var(--error) / 0.5);
-	}
-
-	.gameboard:hover {
-		cursor: pointer;
+			span:first-child {
+				font-size: 11px;
+			}
+		}
 	}
 
 	.ship-sprite {
@@ -178,107 +177,53 @@ body.preparation {
 	}
 
 	/* Responsiveness ⬇️ */
-	@media (width >= 26.5rem) {
-		.gameboard {
-			--size: 380px;
-		}
-	}
-
-	@media (width >= 33.25rem) {
-		main {
-			width: 70dvw;
-		}
-
-		.gameboard {
-			--size: 70dvw;
-		}
-	}
-
 	@media (width >= 40rem) {
-		main {
-			width: 60dvw;
-		}
-
-		.gameboard {
-			--size: 60dvw;
+		.helper-btns > button {
+			padding: 0.5rem;
 		}
 	}
 
 	@media (width >= 48rem) {
-		height: fit-content;
-
-		main {
-			width: 50dvw;
-		}
-
-		.gameboard {
-			--size: 50dvw;
-		}
-
 		.helper-btns {
 			--button-size: 3rem;
-		}
 
-		.helper-btns > button {
-			font-size: 0.75rem;
-		}
+			& > button {
+				font-size: 0.75rem;
 
-		.helper-btns > button > span:first-child {
-			font-size: 0.75rem;
+				span:first-child {
+					font-size: 0.75rem;
+				}
+			}
 		}
 
 		.ship {
 			--ship-icon-size: 2rem;
-		}
 
-		.ship p {
-			font-size: 0.75rem;
+			p {
+				font-size: 0.75rem;
+			}
 		}
 	}
 
 	@media (width >= 64rem) {
 		.helper-btns {
 			--button-size: 3.25rem;
-		}
 
-		.helper-btns > button {
-			gap: 0.5rem;
+			& > button {
+				gap: 0.5rem;
+			}
 		}
 
 		.ship {
 			--ship-icon-size: 2.5rem;
-		}
 
-		.ship p {
-			font-size: 0.75rem;
+			p {
+				font-size: 0.75rem;
+			}
 		}
 
 		.confirm-preparation {
 			font-size: 1.75rem;
-		}
-	}
-
-	@media (width >= 80rem) {
-		main {
-			width: 40dvw;
-		}
-
-		.gameboard {
-			--size: 40dvw;
-		}
-
-		.helper-btns {
-			--button-size: 3.75rem;
-		}
-	}
-
-	@media (width >= 96rem) {
-		main {
-			width: 30dvw;
-		}
-
-		.gameboard {
-			--size: 30dvw;
 		}
 	}
 }

@@ -12,32 +12,12 @@ body.start {
 			gap: 0.25rem;
 
 			& > img:first-child {
-				max-height: 280px;
+				max-height: 260px;
 			}
 
 			& > img:last-child {
-				max-width: 280px;
+				max-width: 250px;
 			}
-		}
-	}
-
-	.header {
-		width: fit-content;
-
-		& > h1 {
-			font-family: var(--display-font), var(--main-font), var(--fallback-fonts);
-			color: rgb(var(--primary));
-
-			font-size: 3rem;
-			text-align: center;
-			letter-spacing: 0.05em;
-		}
-
-		& > p {
-			padding-top: 0.25rem;
-			font-weight: bold;
-			text-align: right;
-			color: rgb(var(--outline));
 		}
 	}
 
