@@ -24,14 +24,11 @@ class PreparationHandler {
 
 	shipPlacement = {
 		states: Object.keys(this.userData.shipsData),
-		shipPlacementIdx: 0,
-		shipPlacementAxis: "x",
+		idx: 0,
+		axis: "x",
 	};
 
-	shipPlacementStates = Object.keys(this.userData.shipsData);
-	shipPlacementIdx = 0;
-	currentShip = this.shipPlacementStates[this.shipPlacementIdx];
-	shipPlacementAxis = "x";
+	currentShip = this.shipPlacement.states[this.shipPlacement.idx];
 
 	constructor() {
 		this.bodyEl = document.querySelector("body");
@@ -56,34 +53,39 @@ class PreparationHandler {
 
 	rotateBtnEvent(buttonEl) {
 		buttonEl.addEventListener("click", () => {
-			this.shipPlacementAxis = this.shipPlacementAxis === "x" ? "y" : "x";
-			console.log("Ship axis: ", this.shipPlacementAxis);
+			this.shipPlacement.axis = this.shipPlacement.axis === "x" ? "y" : "x";
+			console.log("Ship placement axis changed: ", this.shipPlacement.axis);
 		});
 	}
 
 	undoShipIndicators(idx) {
 		const shipIndicators = this.bodyEl.querySelectorAll(".ships > .ship");
 
-		const ship = shipIndicators[this.shipPlacementIdx];
-		ship.classList.remove("focused", "placed");
+		const ship = shipIndicators[this.shipPlacement.idx];
+		ship.classList.replace("placed", "focused");
 
-		const previousShip = ship.previousElementSibling;
+		const nextShip = ship.nextElementSibling;
+		console.log("Next ship: ", nextShip);
 
-		if (previousShip !== null)
-			previousShip.classList.replace("placed", "focused");
+		if (nextShip !== null) nextShip.classList.remove("focused", "placed");
 	}
 
 	undoCurrentShipState() {
-		if (this.shipPlacementIdx === 0) return;
+		if (this.shipPlacement.idx === 0) return;
 
-		this.shipPlacementIdx--;
-		this.currentShip = this.shipPlacementStates[this.shipPlacementIdx];
+		const shipsData = Object.values(this.userData.shipsData);
+
+		if (shipsData[shipsData.length - 1].length < 1) this.shipPlacement.idx--;
+
+		this.currentShip = this.shipPlacement.states[this.shipPlacement.idx];
 	}
 
-	destroyPlacedShips(shipLocations) {
-		let currentShipCoords = this.userData.shipsData[this.currentShip];
+	undoShipDataRecord() {
+		this.userData.shipsData[this.currentShip] = [];
+	}
 
-		const shipLocCells = currentShipCoords.map((pos) => {
+	destroyPlacedShips(currShipCoords) {
+		let shipLocCells = currShipCoords.map((pos) => {
 			const cell = this.bodyEl.querySelector(`.cell[data-position="${pos}"]
 			`);
 
@@ -94,17 +96,23 @@ class PreparationHandler {
 			cell.innerHTML = "";
 			cell.classList.remove("placeholder", "ready");
 		});
-
-		this.userData.shipsData[this.currentShip] = [];
 	}
 
 	undoShipPlacement() {
-		if (this.shipPlacementIdx === 0) return;
-		this.undoShipIndicators();
+		if (this.shipPlacement.idx === 0) return;
+
 		this.undoCurrentShipState();
-		this.destroyPlacedShips();
+
+		const currShipCoords = this.userData.shipsData[this.currentShip];
+
+		this.undoShipDataRecord();
+
+		this.undoShipIndicators();
+
+		this.destroyPlacedShips(currShipCoords);
 
 		console.log("Ship location removed: ", this.userData.shipsData);
+		console.log("Current ship state: ", this.currentShip);
 	}
 
 	undoBtnEvent(buttonEl) {
@@ -115,6 +123,7 @@ class PreparationHandler {
 
 	areAllShipsPlaced() {
 		const shipsData = Object.values(this.userData.shipsData);
+		// console.log("Ships data fetched: ", shipsData);
 		return shipsData[shipsData.length - 1].length > 0;
 	}
 
@@ -138,7 +147,7 @@ class PreparationHandler {
 		const row = Number(midPos[0] + "0");
 		const col = Number(row + 10) - 1;
 
-		if ((targetPos < row || targetPos > col) && this.shipPlacementAxis === "x")
+		if ((targetPos < row || targetPos > col) && this.shipPlacement.axis === "x")
 			return true;
 		if (targetPos < MIN || targetPos > MAX) return true;
 
@@ -162,7 +171,7 @@ class PreparationHandler {
 
 		currentShipPositionVertices.forEach((vertex) => {
 			const cellPos = this.calculateAxis(
-				this.shipPlacementAxis,
+				this.shipPlacement.axis,
 				position,
 				vertex,
 			);
@@ -178,7 +187,7 @@ class PreparationHandler {
 		});
 
 		const imgSpritePaths = SHIP[this.currentShip];
-		const imgSpriteClass = `ship-sprite ${this.shipPlacementAxis}`;
+		const imgSpriteClass = `ship-sprite ${this.shipPlacement.axis}`;
 		const isOutOfBounds = cellsToBeFilled.includes(null);
 		const areCellsOccupied = this.areCellsOccupied(cellsToBeFilled);
 
@@ -216,7 +225,7 @@ class PreparationHandler {
 
 		currentShipPositionVertices.forEach((vertex) => {
 			const cellPos = this.calculateAxis(
-				this.shipPlacementAxis,
+				this.shipPlacement.axis,
 				position,
 				vertex,
 			);
@@ -258,11 +267,14 @@ class PreparationHandler {
 	}
 
 	updateCurrentShipState() {
-		const shipLength = this.shipPlacementStates.length - 1;
-		if (this.shipPlacementIdx >= shipLength) return;
+		const shipLength = this.shipPlacement.states.length - 1;
+		if (this.shipPlacement.idx >= shipLength) return;
 
-		this.shipPlacementIdx++;
-		this.currentShip = this.shipPlacementStates[this.shipPlacementIdx];
+		this.shipPlacement.idx++;
+		this.currentShip = this.shipPlacement.states[this.shipPlacement.idx];
+
+		console.log("Ship placement updated: ", this.shipPlacement);
+		console.log("Current ship: ", this.currentShip);
 	}
 
 	recordCurrentShipData(position) {
@@ -277,7 +289,7 @@ class PreparationHandler {
 			const vertex = currentShipPositionVertices[i];
 
 			const cellPos = this.calculateAxis(
-				this.shipPlacementAxis,
+				this.shipPlacement.axis,
 				position,
 				vertex,
 			);
@@ -297,8 +309,7 @@ class PreparationHandler {
 			return alert("Coordinates already occupied by other ship.");
 
 		this.renderCurrentShipToGameboard(position, "ready");
-
-		this.updateShipIndicators(this.shipPlacementIdx);
+		this.updateShipIndicators(this.shipPlacement.idx);
 
 		this.userData.shipsData[this.currentShip] = coordinates;
 
