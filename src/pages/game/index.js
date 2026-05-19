@@ -2,9 +2,10 @@ import { generateGameboardCells } from "../../utils/dom";
 
 import aircraftCarrierIcon from "../../assets/imgs/ships/aircraft-carrier.svg";
 import battleshipIcon from "../../assets/imgs/ships/battleship.svg";
-import cruiserShip from "../../assets/imgs/ships/cruiser.svg";
+import cruiserShipIcon from "../../assets/imgs/ships/cruiser.svg";
 import destroyerIcon from "../../assets/imgs/ships/destroyer.svg";
 import submarineIcon from "../../assets/imgs/ships/submarine.svg";
+import vsSymbol from "../../assets/imgs/VS.png";
 
 const gameUI = () => {
 	return `
@@ -20,7 +21,7 @@ const gameUI = () => {
 					<div>
 						<div class="player-name">
 							<span>
-								<span class="material-symbols-outlined"> person </span>
+								<span class="material-symbols-outlined filled"> person </span>
 								<p>Yves</p>
 							</span>
 							<button class="forfeit-btn error-btn-filled">
@@ -33,59 +34,85 @@ const gameUI = () => {
 						${generateGameboardCells()}
 					</div>
 					<div class="ships-indicator">
-						<img
-							src="${aircraftCarrierIcon}"
-							alt="Aircraft Carrier logo"
-							class="ship" /><img
-							src="${battleshipIcon}"
-							alt="Battleship logo"
-							class="ship" /><img
-							src="${cruiserShipIcon}"
-							alt="Cruiser logo"
-							class="ship" /><img
-							src="${destroyerIcon}"
-							alt="Destroyer logo"
-							class="ship" /><img
-							src="${submarineIcon}"
-							alt="Submarine logo"
-							class="ship" />
+						<div class="ship focused">
+							<img
+								class="svg"
+								src="${aircraftCarrierIcon}"
+								alt="Aircraft Carrier logo" />
+						</div>
+						<div class="ship focused">
+							<img
+								class="svg"
+								src="${battleshipIcon}"
+								alt="Battleship logo" />
+						</div>
+						<div class="ship focused">
+							<img
+								class="svg"
+								src="${cruiserShipIcon}"
+								alt="Cruiser logo" />
+						</div>
+						<div class="ship focused">
+							<img
+								class="svg"
+								src="${destroyerIcon}"
+								alt="Destroyer logo" />
+						</div>
+						<div class="ship focused">
+							<img
+								class="svg"
+								src="${submarineIcon}"
+								alt="Submarine logo" />
+						</div>
 					</div>
 				</div>
 				<img
 					class="versus-symbol"
-					src="./assets/imgs/VS.png"
+					src="${vsSymbol}"
 					alt="Vesus symbol" />
 				<div class="player-game-info">
 					<div>
 						<div class="player-name">
 							<span>
-								<span class="material-symbols-outlined"> robot_2 </span>
+								<span class="material-symbols-outlined filled"> robot_2 </span>
 								<p>Robot</p>
 							</span>
-							<button class="forfeit-btn error-btn-filled">
-								<span class="material-symbols-outlined"> flag_2 </span>
-								<p>Forfeit</p>
-							</button>
 						</div>
 					</div>
-					<div class="gameboard"></div>
+					<div class="gameboard">
+						${generateGameboardCells()}
+					</div>
 					<div class="ships-indicator">
-						<img
-							src="${aircraftCarrierIcon}"
-							alt="Aircraft Carrier logo"
-							class="ship" /><img
-							src="${battleshipIcon}"
-							alt="Battleship logo"
-							class="ship" /><img
-							src="${cruiserShip}"
-							alt="Cruiser logo"
-							class="ship" /><img
-							src="${destroyerIcon}"
-							alt="Destroyer logo"
-							class="ship" /><img
-							src="${submarineIcon}"
-							alt="Submarine logo"
-							class="ship" />
+						<div class="ship focused">
+							<img
+								class="svg"
+								src="${aircraftCarrierIcon}"
+								alt="Aircraft Carrier logo" />
+						</div>
+						<div class="ship focused">
+							<img
+								class="svg"
+								src="${battleshipIcon}"
+								alt="Battleship logo" />
+						</div>
+						<div class="ship focused">
+							<img
+								class="svg"
+								src="${cruiserShipIcon}"
+								alt="Cruiser logo" />
+						</div>
+						<div class="ship focused">
+							<img
+								class="svg"
+								src="${destroyerIcon}"
+								alt="Destroyer logo" />
+						</div>
+						<div class="ship destroyed">
+							<img
+								class="svg"
+								src="${submarineIcon}"
+								alt="Submarine logo" />
+						</div>
 					</div>
 				</div>
 			</div>
@@ -107,3 +134,5 @@ const gameUI = () => {
 		</footer>
   `;
 };
+
+export default gameUI;

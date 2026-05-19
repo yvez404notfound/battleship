@@ -21,6 +21,7 @@
 		background-color: none;
 		/* border: 0.5px solid rgb(var(--outline-variant)); */
 		overflow: hidden;
+		color: rgb(var(--on-primary));
 	}
 
 	.cell.illegal {
@@ -50,4 +51,61 @@
 
 .gameboard:hover {
 	cursor: pointer;
+}
+
+.ship {
+	--ship-icon-size: 1.75rem;
+
+	max-width: calc(var(--ship-icon-size) * 1.75);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: start;
+
+	svg {
+		width: var(--ship-icon-size);
+		height: var(--ship-icon-size);
+
+		path {
+			fill: rgb(var(--outline));
+			opacity: 80%;
+		}
+	}
+
+	p {
+		font-size: 10px;
+		text-align: center;
+		color: rgb(var(--outline));
+	}
+}
+
+.ship.focused {
+	svg path {
+		fill: rgb(var(--primary));
+		opacity: 100%;
+	}
+
+	p {
+		color: rgb(var(--primary));
+	}
+}
+
+.ship.placed {
+	svg path {
+		fill: rgb(var(--success));
+		opacity: 100%;
+		box-shadow: var(--elevation-5);
+	}
+
+	p {
+		color: rgb(var(--primary));
+	}
+}
+
+.ship.destroyed {
+	& > svg path {
+		fill: rgb(var(--error));
+		opacity: 60%;
+		transform: scaleY(-1);
+	}
 }

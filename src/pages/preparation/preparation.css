@@ -1,11 +1,8 @@
 body.preparation {
 	margin: 0;
-	display: flex;
-	flex-direction: column;
 
 	/* Descendants ⬇️ */
 	main {
-		flex: 1;
 		width: fit-content;
 		display: grid;
 		margin: 2rem 0;
@@ -86,55 +83,6 @@ body.preparation {
 	.ships {
 		display: flex;
 		gap: 0.5rem;
-
-		& > .ship {
-			--ship-icon-size: 1.75rem;
-
-			max-width: calc(var(--ship-icon-size) * 1.75);
-			display: flex;
-			flex-direction: column;
-			align-items: center;
-			justify-content: start;
-
-			svg {
-				width: var(--ship-icon-size);
-				height: var(--ship-icon-size);
-
-				path {
-					fill: rgb(var(--outline));
-					opacity: 80%;
-				}
-			}
-
-			p {
-				font-size: 10px;
-				text-align: center;
-				color: rgb(var(--outline));
-			}
-		}
-
-		& > .ship.focused {
-			svg path {
-				fill: rgb(var(--primary));
-				opacity: 100%;
-			}
-
-			p {
-				color: rgb(var(--primary));
-			}
-		}
-
-		& > .ship.placed {
-			svg path {
-				fill: rgb(var(--success));
-				opacity: 100%;
-				box-shadow: var(--elevation-5);
-			}
-
-			p {
-				color: rgb(var(--primary));
-			}
-		}
 	}
 
 	.helper-btns {

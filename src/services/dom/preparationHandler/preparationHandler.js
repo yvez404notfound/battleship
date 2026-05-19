@@ -1,5 +1,6 @@
 import { SHIP } from "../../../assets/imgs/ships/sprites/shipAssets";
 import preparationPageUI from "../../../pages/preparation";
+import { generateRandVal } from "../../../utils/random";
 import ScreenManager from "../screenManager/screenManager";
 
 class PreparationHandler {
@@ -14,13 +15,30 @@ class PreparationHandler {
 	userData = {
 		name,
 		shipsData: {
-			aircraftCarrier: [],
-			battleship: [],
-			cruiser: [],
-			submarine: [],
-			destroyer: [],
+			aircraftCarrier: {
+				coords: [],
+				axis: "",
+			},
+			battleship: {
+				coords: [],
+				axis: "",
+			},
+			cruiser: {
+				coords: [],
+				axis: "",
+			},
+			submarine: {
+				coords: [],
+				axis: "",
+			},
+			destroyer: {
+				coords: [],
+				axis: "",
+			},
 		},
 	};
+
+	robotShipData = {};
 
 	shipPlacement = {
 		states: Object.keys(this.userData.shipsData),
@@ -32,6 +50,7 @@ class PreparationHandler {
 
 	constructor() {
 		this.bodyEl = document.querySelector("body");
+		console.log("Current ship: ", this.currentShip);
 	}
 
 	renderPage() {
@@ -45,10 +64,10 @@ class PreparationHandler {
 			"We must know your name before we battle, Admiral.",
 		);
 
-		inputEl.addEventListener("input", (e) => {
-			this.userData.name = e.target.value;
-			console.log("Name: ", this.userData.name);
-		});
+		inputEl.addEventListener(
+			"input",
+			(e) => (this.userData.name = e.target.value),
+		);
 	}
 
 	rotateBtnEvent(buttonEl) {
@@ -65,7 +84,6 @@ class PreparationHandler {
 		ship.classList.replace("placed", "focused");
 
 		const nextShip = ship.nextElementSibling;
-		console.log("Next ship: ", nextShip);
 
 		if (nextShip !== null) nextShip.classList.remove("focused", "placed");
 	}
@@ -73,7 +91,9 @@ class PreparationHandler {
 	undoCurrentShipState() {
 		if (this.shipPlacement.idx === 0) return;
 
-		const shipsData = Object.values(this.userData.shipsData);
+		const shipsData = Object.values(this.userData.shipsData).map((data) => {
+			return data.coords;
+		});
 
 		if (shipsData[shipsData.length - 1].length < 1) this.shipPlacement.idx--;
 
@@ -81,7 +101,8 @@ class PreparationHandler {
 	}
 
 	undoShipDataRecord() {
-		this.userData.shipsData[this.currentShip] = [];
+		this.userData.shipsData[this.currentShip].coords = [];
+		this.userData.shipsData[this.currentShip].axis = "";
 	}
 
 	destroyPlacedShips(currShipCoords) {
@@ -103,7 +124,7 @@ class PreparationHandler {
 
 		this.undoCurrentShipState();
 
-		const currShipCoords = this.userData.shipsData[this.currentShip];
+		const currShipCoords = this.userData.shipsData[this.currentShip].coords;
 
 		this.undoShipDataRecord();
 
@@ -112,7 +133,7 @@ class PreparationHandler {
 		this.destroyPlacedShips(currShipCoords);
 
 		console.log("Ship location removed: ", this.userData.shipsData);
-		console.log("Current ship state: ", this.currentShip);
+		console.log("Current ship: ", this.currentShip);
 	}
 
 	undoBtnEvent(buttonEl) {
@@ -122,8 +143,9 @@ class PreparationHandler {
 	}
 
 	areAllShipsPlaced() {
-		const shipsData = Object.values(this.userData.shipsData);
-		// console.log("Ships data fetched: ", shipsData);
+		const shipsData = Object.values(this.userData.shipsData).map((data) => {
+			return data.coords;
+		});
 		return shipsData[shipsData.length - 1].length > 0;
 	}
 
@@ -140,16 +162,15 @@ class PreparationHandler {
 		return pos < 10 && pos >= 0 ? `0${pos}` : pos;
 	}
 
-	isPositionOutOfBounds(targetPos, midPos) {
+	isPositionOutOfBounds(targetPos, midPos, axis) {
 		const MIN = 0;
 		const MAX = 99;
 
 		const row = Number(midPos[0] + "0");
 		const col = Number(row + 10) - 1;
 
-		if ((targetPos < row || targetPos > col) && this.shipPlacement.axis === "x")
-			return true;
-		if (targetPos < MIN || targetPos > MAX) return true;
+		if ((targetPos < row || targetPos > col) && axis === "x") return true;
+		if (Number(targetPos) < MIN || Number(targetPos) > MAX) return true;
 
 		return false;
 	}
@@ -176,7 +197,9 @@ class PreparationHandler {
 				vertex,
 			);
 
-			if (this.isPositionOutOfBounds(cellPos, position)) {
+			if (
+				this.isPositionOutOfBounds(cellPos, position, this.shipPlacement.axis)
+			) {
 				cellsToBeFilled.push(null);
 				return;
 			}
@@ -230,7 +253,9 @@ class PreparationHandler {
 				vertex,
 			);
 
-			if (this.isPositionOutOfBounds(cellPos, position)) {
+			if (
+				this.isPositionOutOfBounds(cellPos, position, this.shipPlacement.axis)
+			) {
 				cellsToBeDestroyed.push(null);
 				return;
 			}
@@ -272,9 +297,6 @@ class PreparationHandler {
 
 		this.shipPlacement.idx++;
 		this.currentShip = this.shipPlacement.states[this.shipPlacement.idx];
-
-		console.log("Ship placement updated: ", this.shipPlacement);
-		console.log("Current ship: ", this.currentShip);
 	}
 
 	recordCurrentShipData(position) {
@@ -294,7 +316,9 @@ class PreparationHandler {
 				vertex,
 			);
 
-			if (this.isPositionOutOfBounds(cellPos, position))
+			if (
+				this.isPositionOutOfBounds(cellPos, position, this.shipPlacement.axis)
+			)
 				return alert("This ship is out of bounds.");
 
 			const cell = this.bodyEl.querySelector(
@@ -311,10 +335,13 @@ class PreparationHandler {
 		this.renderCurrentShipToGameboard(position, "ready");
 		this.updateShipIndicators(this.shipPlacement.idx);
 
-		this.userData.shipsData[this.currentShip] = coordinates;
+		this.userData.shipsData[this.currentShip].coords = coordinates;
+		this.userData.shipsData[this.currentShip].axis = this.shipPlacement.axis;
+
+		console.log("Ship location inserted: ", this.currentShip);
+		console.table(this.userData.shipsData[this.currentShip]);
 
 		this.updateCurrentShipState();
-		console.log("Ship location inserted: ", this.userData.shipsData);
 	}
 
 	gameboardCellClickEvent(cell) {
@@ -337,14 +364,62 @@ class PreparationHandler {
 		});
 	}
 
+	generateRobotPlayerShipData() {
+		const SHIPS = Object.values(this.shipPlacement.states);
+		const SHIP_VERTICES = Object.values(this.SHIP_POSITION_VERTICES);
+		const AXES = ["x", "y"];
+		const MAX = 99;
+
+		let occupiedPositions = new Set();
+		let data = {};
+
+		let isOutOfBounds = false;
+		SHIPS.forEach((ship, i) => {
+			debugger;
+			while (true) {
+				const axis = AXES[generateRandVal(AXES.length - 1)];
+				const vertices = SHIP_VERTICES[i];
+				let coords = [];
+
+				let midPos = generateRandVal(MAX);
+				midPos = String(midPos < 10 && midPos >= 0 ? `0${midPos}` : midPos);
+
+				for (const vertex of vertices) {
+					const pos = this.calculateAxis(axis, midPos, vertex);
+					isOutOfBounds =
+						this.isPositionOutOfBounds(pos, midPos, axis) ||
+						occupiedPositions.has(pos);
+
+					if (isOutOfBounds) break;
+
+					coords.push(pos);
+				}
+
+				if (!isOutOfBounds) {
+					coords.forEach((pos) => occupiedPositions.add(pos));
+
+					data[ship] ||= {};
+
+					data[ship].coords = coords;
+					data[ship].axis = axis;
+					break;
+				}
+			}
+		});
+
+		return data;
+	}
+
 	confirmPreparationEvent(buttonElement, nameInputEl) {
 		buttonElement.addEventListener("click", () => {
 			if (!this.areAllShipsPlaced()) return alert("Place all the ships first.");
 			if (this.userData.name === "") return nameInputEl.reportValidity();
 
-			console.log("Ready for Battle");
+			this.robotShipData = this.generateRobotPlayerShipData();
 
-			ScreenManager.changeState("HOME");
+			console.log("Robot Ship Data Generated: ", this.robotShipData);
+
+			//ScreenManager.changeState("GAME");
 		});
 	}
 

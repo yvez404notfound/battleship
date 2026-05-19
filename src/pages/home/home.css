@@ -1,5 +1,11 @@
 body.start {
-	width: 100%;
+	min-width: 100%;
+
+	& > main {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+	}
 
 	.hero {
 		display: grid;
@@ -32,12 +38,6 @@ body.start {
 
 	.start-game-btn:hover {
 		box-shadow: var(--elevation-3);
-	}
-
-	footer {
-		position: absolute;
-		left: 0;
-		bottom: 0;
 	}
 
 	@media (width >= 48rem) {
