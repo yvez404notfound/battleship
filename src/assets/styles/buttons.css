@@ -9,7 +9,7 @@ button[class*="btn"] {
 	align-items: center;
 	cursor: pointer;
 	transition:
-		background-color 0.3s ease-in-out,
+		background-color 0.2s ease-in-out,
 		transform 0.1s ease-in;
 }
 
@@ -31,6 +31,10 @@ button[class*="btn"]:hover {
 	color: rgb(var(--on-secondary));
 }
 
+.secondary-btn-filled:hover {
+	background-color: hsl(from rgb(var(--secondary)) h s 20%);
+}
+
 .error-btn-filled {
 	background-color: rgb(var(--error));
 	color: rgb(var(--on-error));
@@ -43,4 +47,8 @@ button[class*="btn"]:hover {
 .error-btn-tonal {
 	background-color: rgb(var(--error-container));
 	color: rgb(var(--on-error-container));
+}
+
+.error-btn-tonal:hover {
+	background-color: hsl(from rgb(var(--error-container)) h s 80%);
 }
