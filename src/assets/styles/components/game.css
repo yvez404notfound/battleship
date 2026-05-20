@@ -105,7 +105,6 @@
 .ship.destroyed {
 	& > svg path {
 		fill: rgb(var(--error));
-		opacity: 60%;
-		transform: scaleY(-1);
+		opacity: 50%;
 	}
 }

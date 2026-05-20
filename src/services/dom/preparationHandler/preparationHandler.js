@@ -417,9 +417,13 @@ class PreparationHandler {
 
 			this.robotShipData = this.generateRobotPlayerShipData();
 
-			console.log("Robot Ship Data Generated: ", this.robotShipData);
+			ScreenManager.setUserData(this.userData);
+			ScreenManager.setRobotData({
+				name: "Robot",
+				shipsData: this.robotShipData,
+			});
 
-			//ScreenManager.changeState("GAME");
+			ScreenManager.changeState("GAME");
 		});
 	}
 
