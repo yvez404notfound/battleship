@@ -107,7 +107,7 @@ const gameUI = () => {
 								src="${destroyerIcon}"
 								alt="Destroyer logo" />
 						</div>
-						<div class="ship destroyed">
+						<div class="ship focused">
 							<img
 								class="svg"
 								src="${submarineIcon}"

@@ -1,11 +1,21 @@
 class Player {
-	ships = [];
-	recordedAttacks = [];
+	_ships = [];
+	_recordedAttacks = [];
+	_type;
 
 	constructor(type, name, gameboard) {
-		this.type = type;
+		this._type = type;
+		this._gameboard = gameboard;
+
 		this.name = name;
-		this.gameboard = gameboard;
+	}
+
+	getGameboard() {
+		return this._gameboard;
+	}
+
+	getType() {
+		return this._type;
 	}
 
 	inject(method) {

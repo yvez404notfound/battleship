@@ -1,8 +1,8 @@
 class Ship {
 	constructor(type, length, coordinates) {
-		this.type = type;
-		this.length = length;
-		this.coordinates = coordinates;
+		this._type = type;
+		this._length = length;
+		this._coordinates = coordinates;
 	}
 
 	inject(method) {

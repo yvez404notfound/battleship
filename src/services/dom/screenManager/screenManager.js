@@ -10,7 +10,7 @@ class ScreenManager {
 		GAME: new GameHandler(),
 	};
 
-	static currentState = ScreenManager.#STATES.HOME;
+	static currentState = ScreenManager.#STATES.GAME;
 
 	static #userData;
 	static #robotData;

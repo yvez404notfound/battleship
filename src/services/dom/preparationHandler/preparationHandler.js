@@ -38,7 +38,7 @@ class PreparationHandler {
 		},
 	};
 
-	robotShipData = {};
+	robotData = {};
 
 	shipPlacement = {
 		states: Object.keys(this.userData.shipsData),
@@ -415,15 +415,17 @@ class PreparationHandler {
 			if (!this.areAllShipsPlaced()) return alert("Place all the ships first.");
 			if (this.userData.name === "") return nameInputEl.reportValidity();
 
-			this.robotShipData = this.generateRobotPlayerShipData();
+			this.robotData = {
+				name: "Robot",
+				shipsData: this.generateRobotPlayerShipData(),
+			};
+
+			console.log("Generated data for Robot player: ", this.robotData);
 
 			ScreenManager.setUserData(this.userData);
-			ScreenManager.setRobotData({
-				name: "Robot",
-				shipsData: this.robotShipData,
-			});
+			ScreenManager.setRobotData(this.robotData);
 
-			ScreenManager.changeState("GAME");
+			//ScreenManager.changeState("GAME");
 		});
 	}
 

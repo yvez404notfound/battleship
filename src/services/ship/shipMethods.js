@@ -1,20 +1,20 @@
 const hit = (state) => ({
 	hit() {
-		state.length = state.length - 1;
+		state._length = state._length - 1;
 	},
 });
 
 const isSunk = (state) => ({
 	isSunk() {
-		return state.length < 1;
+		return state._length < 1;
 	},
 });
 
 const setCoordinates = (state) => ({
 	setCoordinates(cellCoordinates) {
-		state.coordinates = cellCoordinates;
+		state._coordinates = cellCoordinates;
 
-		state.coordinates.forEach((cell) => {
+		state._coordinates.forEach((cell) => {
 			cell.setOccupiedByShip(this);
 		});
 	},
@@ -22,7 +22,7 @@ const setCoordinates = (state) => ({
 
 const showCoordinates = (state) => ({
 	showCoordinates() {
-		return state.coordinates;
+		return state._coordinates;
 	},
 });
 
