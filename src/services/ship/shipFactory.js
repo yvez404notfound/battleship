@@ -1,20 +1,18 @@
 import Ship from "./ship.js";
-import { hit, isSunk, setCoordinates, showCoordinates } from "./shipMethods.js";
+import { getHP, hit, isSunk } from "./shipMethods.js";
 
 const createAircraftCarrier = function (coordinates) {
 	return new Ship("Aircraft Carrier", 5, coordinates)
 		.inject(hit)
-		.inject(isSunk)
-		.inject(setCoordinates)
-		.inject(showCoordinates);
+		.inject(getHP)
+		.inject(isSunk);
 };
 
 const createBattleship = function (coordinates) {
 	const ship = new Ship("Battleship", 4, coordinates)
 		.inject(hit)
-		.inject(isSunk)
-		.inject(setCoordinates)
-		.inject(showCoordinates);
+		.inject(getHP)
+		.inject(isSunk);
 
 	return ship;
 };
@@ -22,25 +20,22 @@ const createBattleship = function (coordinates) {
 const createCruiser = function (coordinates) {
 	return new Ship("Cruiser", 3, coordinates)
 		.inject(hit)
-		.inject(isSunk)
-		.inject(setCoordinates)
-		.inject(showCoordinates);
+		.inject(getHP)
+		.inject(isSunk);
 };
 
 const createSubmarine = function (coordinates) {
 	return new Ship("Submarine", 3, coordinates)
 		.inject(hit)
-		.inject(isSunk)
-		.inject(setCoordinates)
-		.inject(showCoordinates);
+		.inject(getHP)
+		.inject(isSunk);
 };
 
 const createDestroyer = function (coordinates) {
 	return new Ship("Destroyer", 2, coordinates)
 		.inject(hit)
-		.inject(isSunk)
-		.inject(setCoordinates)
-		.inject(showCoordinates);
+		.inject(getHP)
+		.inject(isSunk);
 };
 
 const createShip = function (type, coordinates) {

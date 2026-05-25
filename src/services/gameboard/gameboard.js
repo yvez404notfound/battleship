@@ -9,22 +9,16 @@ class Gameboard {
 		this.initBoardCell();
 	}
 
-	initBoardCell = function () {
+	initBoardCell() {
 		this.#board = Array.from({ length: this.length }, (_, row) =>
 			Array.from({ length: this.length }, (_, col) => new Cell(`${row}${col}`)),
 		);
-	};
+	}
 
-	receiveAttack = function (position) {
-		const cell = this.#board[position[0]][position[1]];
-
-		if (cell.getOccupiedByShip() === undefined) return;
-
-		cell.takeHit();
-
-		const shipInCell = cell.getOccupiedByShip();
-		shipInCell.hit();
-	};
+	getCell(pos) {
+		const cell = this.#board[pos[0]][pos[1]];
+		return cell;
+	}
 
 	placeShip = function (ship, coordinates) {
 		coordinates.forEach((pos) => {
@@ -35,21 +29,15 @@ class Gameboard {
 		return;
 	};
 
-	getCell(pos) {
+	receiveAttack(pos) {
 		const cell = this.#board[pos[0]][pos[1]];
-		return cell;
+		cell.takeHit();
+
+		if (!cell.getOccupiedByShip()) return;
+
+		const shipInCell = cell.getOccupiedByShip();
+		shipInCell.hit();
 	}
 }
-
-// const gameboardTest = new Gameboard("Yves");
-
-/* 
-gameboardTest.initBoardCell();
-console.log(gameboardTest.board);
-
-gameboardTest.receiveAttack("00");
-gameboardTest.placeShip();
-console.log(gameboardTest.board); 
-*/
 
 export default Gameboard;

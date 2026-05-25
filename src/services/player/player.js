@@ -10,14 +10,6 @@ class Player {
 		this.name = name;
 	}
 
-	getGameboard() {
-		return this._gameboard;
-	}
-
-	getType() {
-		return this._type;
-	}
-
 	inject(method) {
 		Object.assign(this, method(this));
 		return this;
