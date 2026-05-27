@@ -50,7 +50,6 @@ class PreparationHandler {
 
 	constructor() {
 		this.bodyEl = document.querySelector("body");
-		console.log("Current ship: ", this.currentShip);
 	}
 
 	renderPage() {
@@ -149,32 +148,6 @@ class PreparationHandler {
 		return shipsData[shipsData.length - 1].length > 0;
 	}
 
-	calculateAxis(axis, position, vertex) {
-		let pos;
-
-		if (axis === "x") {
-			pos = `${+position + vertex}`;
-		} else {
-			pos = `${+position[0] + vertex}${position[1]}`;
-			pos = Number(pos[0]) === 0 ? pos[1] : pos;
-		}
-
-		return pos < 10 && pos >= 0 ? `0${pos}` : pos;
-	}
-
-	isPositionOutOfBounds(targetPos, midPos, axis) {
-		const MIN = 0;
-		const MAX = 99;
-
-		const row = Number(midPos[0] + "0");
-		const col = Number(row + 10) - 1;
-
-		if ((targetPos < row || targetPos > col) && axis === "x") return true;
-		if (Number(targetPos) < MIN || Number(targetPos) > MAX) return true;
-
-		return false;
-	}
-
 	areCellsOccupied(cells) {
 		const hasChild = cells.some((cell) => {
 			if (cell === null) return;
@@ -191,15 +164,9 @@ class PreparationHandler {
 			this.SHIP_POSITION_VERTICES[this.currentShip];
 
 		currentShipPositionVertices.forEach((vertex) => {
-			const cellPos = this.calculateAxis(
-				this.shipPlacement.axis,
-				position,
-				vertex,
-			);
+			const cellPos = calculateAxis(this.shipPlacement.axis, position, vertex);
 
-			if (
-				this.isPositionOutOfBounds(cellPos, position, this.shipPlacement.axis)
-			) {
+			if (isPositionOutOfBounds(cellPos, position, this.shipPlacement.axis)) {
 				cellsToBeFilled.push(null);
 				return;
 			}
@@ -247,15 +214,9 @@ class PreparationHandler {
 		let cellsToBeDestroyed = [];
 
 		currentShipPositionVertices.forEach((vertex) => {
-			const cellPos = this.calculateAxis(
-				this.shipPlacement.axis,
-				position,
-				vertex,
-			);
+			const cellPos = calculateAxis(this.shipPlacement.axis, position, vertex);
 
-			if (
-				this.isPositionOutOfBounds(cellPos, position, this.shipPlacement.axis)
-			) {
+			if (isPositionOutOfBounds(cellPos, position, this.shipPlacement.axis)) {
 				cellsToBeDestroyed.push(null);
 				return;
 			}
@@ -310,15 +271,9 @@ class PreparationHandler {
 		for (let i = 0; i <= currentShipPositionVertices.length - 1; i++) {
 			const vertex = currentShipPositionVertices[i];
 
-			const cellPos = this.calculateAxis(
-				this.shipPlacement.axis,
-				position,
-				vertex,
-			);
+			const cellPos = calculateAxis(this.shipPlacement.axis, position, vertex);
 
-			if (
-				this.isPositionOutOfBounds(cellPos, position, this.shipPlacement.axis)
-			)
+			if (isPositionOutOfBounds(cellPos, position, this.shipPlacement.axis))
 				return alert("This ship is out of bounds.");
 
 			const cell = this.bodyEl.querySelector(
@@ -364,52 +319,6 @@ class PreparationHandler {
 		});
 	}
 
-	generateRobotPlayerShipData() {
-		const SHIPS = Object.values(this.shipPlacement.states);
-		const SHIP_VERTICES = Object.values(this.SHIP_POSITION_VERTICES);
-		const AXES = ["x", "y"];
-		const MAX = 99;
-
-		let occupiedPositions = new Set();
-		let data = {};
-
-		let isOutOfBounds = false;
-		SHIPS.forEach((ship, i) => {
-			debugger;
-			while (true) {
-				const axis = AXES[generateRandVal(AXES.length - 1)];
-				const vertices = SHIP_VERTICES[i];
-				let coords = [];
-
-				let midPos = generateRandVal(MAX);
-				midPos = String(midPos < 10 && midPos >= 0 ? `0${midPos}` : midPos);
-
-				for (const vertex of vertices) {
-					const pos = this.calculateAxis(axis, midPos, vertex);
-					isOutOfBounds =
-						this.isPositionOutOfBounds(pos, midPos, axis) ||
-						occupiedPositions.has(pos);
-
-					if (isOutOfBounds) break;
-
-					coords.push(pos);
-				}
-
-				if (!isOutOfBounds) {
-					coords.forEach((pos) => occupiedPositions.add(pos));
-
-					data[ship] ||= {};
-
-					data[ship].coords = coords;
-					data[ship].axis = axis;
-					break;
-				}
-			}
-		});
-
-		return data;
-	}
-
 	confirmPreparationEvent(buttonElement, nameInputEl) {
 		buttonElement.addEventListener("click", () => {
 			if (!this.areAllShipsPlaced()) return alert("Place all the ships first.");
@@ -417,7 +326,10 @@ class PreparationHandler {
 
 			this.robotData = {
 				name: "Robot",
-				shipsData: this.generateRobotPlayerShipData(),
+				shipsData: generateRobotPlayerShipData(
+					this.shipPlacement.states,
+					this.SHIP_POSITION_VERTICES,
+				),
 			};
 
 			console.log("Generated data for Robot player: ", this.robotData);
@@ -443,5 +355,81 @@ class PreparationHandler {
 		this.confirmPreparationEvent(confirmBtn, nameInputEl);
 	}
 }
+
+// region Helpers
+const calculateAxis = (axis, position, vertex) => {
+	let pos;
+
+	if (axis === "x") {
+		pos = `${+position + vertex}`;
+	} else {
+		pos = `${+position[0] + vertex}${position[1]}`;
+		pos = Number(pos[0]) === 0 ? pos[1] : pos;
+	}
+
+	return pos < 10 && pos >= 0 ? `0${pos}` : pos;
+};
+
+const isPositionOutOfBounds = (targetPos, midPos, axis) => {
+	const MIN = 0;
+	const MAX = 99;
+
+	const row = Number(midPos[0] + "0");
+	const col = Number(row + 10) - 1;
+
+	if ((targetPos < row || targetPos > col) && axis === "x") return true;
+	if (Number(targetPos) < MIN || Number(targetPos) > MAX) return true;
+
+	return false;
+};
+
+const generateRobotPlayerShipData = (
+	shipPlacementStates,
+	shipPositionVertices,
+) => {
+	const SHIPS = Object.values(shipPlacementStates);
+	const SHIP_VERTICES = Object.values(shipPositionVertices);
+	const AXES = ["x", "y"];
+	const MAX = 99;
+
+	let occupiedPositions = new Set();
+	let data = {};
+
+	let isOutOfBounds = false;
+	SHIPS.forEach((ship, i) => {
+		while (true) {
+			const axis = AXES[generateRandVal(AXES.length - 1)];
+			const vertices = SHIP_VERTICES[i];
+			let coords = [];
+
+			let midPos = generateRandVal(MAX);
+			midPos = String(midPos < 10 && midPos >= 0 ? `0${midPos}` : midPos);
+
+			for (const vertex of vertices) {
+				const pos = calculateAxis(axis, midPos, vertex);
+				isOutOfBounds =
+					isPositionOutOfBounds(pos, midPos, axis) ||
+					occupiedPositions.has(pos);
+
+				if (isOutOfBounds) break;
+
+				coords.push(pos);
+			}
+
+			if (!isOutOfBounds) {
+				coords.forEach((pos) => occupiedPositions.add(pos));
+
+				data[ship] ||= {};
+
+				data[ship].coords = coords;
+				data[ship].axis = axis;
+				break;
+			}
+		}
+	});
+
+	return data;
+};
+// endregion
 
 export default PreparationHandler;
