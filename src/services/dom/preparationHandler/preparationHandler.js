@@ -425,7 +425,7 @@ class PreparationHandler {
 			ScreenManager.setUserData(this.userData);
 			ScreenManager.setRobotData(this.robotData);
 
-			//ScreenManager.changeState("GAME");
+			ScreenManager.changeState("GAME");
 		});
 	}
 
