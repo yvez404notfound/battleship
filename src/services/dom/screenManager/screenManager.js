@@ -1,4 +1,4 @@
-import { convertAssetsToInlineSVG } from "../../../utils/asset";
+import { convertAssetsToInlineSVG } from "../../../utils/asset.js";
 import GameHandler from "../gameHandler/gameHandler";
 import HomepageHandler from "../homepageHandler/homepageHandler";
 import PreparationHandler from "../preparationHandler/preparationHandler";
@@ -10,12 +10,10 @@ class ScreenManager {
 		GAME: new GameHandler(),
 	};
 
-	static currentState = ScreenManager.#STATES.GAME;
+	static currentState = ScreenManager.#STATES.HOME;
 
 	static #userData;
 	static #robotData;
-
-	constructor() {}
 
 	static renderCurrentPage() {
 		ScreenManager.currentState.renderPage();
@@ -24,13 +22,12 @@ class ScreenManager {
 	}
 
 	static changeState(newState) {
-		console.log(ScreenManager.#STATES);
+		const stateKeys = Object.keys(ScreenManager.#STATES);
 
-		if (!Object.keys(ScreenManager.#STATES).includes(newState))
+		if (!stateKeys.includes(newState))
 			throw new Error("That state doesn't exists");
-		ScreenManager.currentState = ScreenManager.#STATES[newState];
 
-		console.log(ScreenManager.currentState);
+		ScreenManager.currentState = ScreenManager.#STATES[newState];
 
 		ScreenManager.renderCurrentPage();
 	}
@@ -39,12 +36,12 @@ class ScreenManager {
 		ScreenManager.#userData = data;
 	}
 
-	static getUserData(data) {
-		return ScreenManager.#userData;
-	}
-
 	static setRobotData(data) {
 		ScreenManager.#robotData = data;
+	}
+
+	static getUserData(data) {
+		return ScreenManager.#userData;
 	}
 
 	static getRobotData(data) {

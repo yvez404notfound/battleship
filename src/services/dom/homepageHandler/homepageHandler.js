@@ -9,6 +9,7 @@ class HomepageHandler {
 	renderPage() {
 		this.bodyEl.innerHTML = homepageUI();
 		this.bodyEl.classList.add("start");
+		this.bodyEl.classList.remove("game", "preparation");
 	}
 
 	bindEvents() {
@@ -19,7 +20,6 @@ class HomepageHandler {
 		const startGameBtnEl = this.bodyEl.querySelector(".start-game-btn");
 
 		startGameBtnEl.addEventListener("click", () => {
-			console.log("preparation");
 			ScreenManager.changeState("PREPARATION");
 		});
 	}
