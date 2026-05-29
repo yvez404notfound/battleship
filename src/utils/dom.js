@@ -4,7 +4,7 @@ const generateGameboardCells = () => {
 	const html = `
 	${boardPositions
 		.map((pos) => {
-			return ` <div class="cell" data-position="${pos < 10 ? `0${pos}` : pos}"></div>`;
+			return ` <div class="cell" data-position="${String(pos).padStart(2, "0")}"></div>`;
 		})
 		.join("")}
 	`;

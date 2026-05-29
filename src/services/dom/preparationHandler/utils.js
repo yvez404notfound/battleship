@@ -1,3 +1,5 @@
+import { generateRandVal } from "../../../utils/random";
+
 const calculateAxis = (axis, position, vertex) => {
 	let pos;
 
@@ -5,10 +7,9 @@ const calculateAxis = (axis, position, vertex) => {
 		pos = `${+position + vertex}`;
 	} else {
 		pos = `${+position[0] + vertex}${position[1]}`;
-		pos = Number(pos[0]) === 0 ? pos[1] : pos;
 	}
 
-	return pos < 10 && pos >= 0 ? `0${pos}` : pos;
+	return pos.padStart(2, "0");
 };
 
 const isPositionOutOfBounds = (targetPos, midPos, axis) => {
@@ -43,8 +44,7 @@ const generateRobotPlayerShipData = (
 			const vertices = SHIP_VERTICES[i];
 			let coords = [];
 
-			let midPos = generateRandVal(MAX);
-			midPos = String(midPos < 10 && midPos >= 0 ? `0${midPos}` : midPos);
+			let midPos = String(generateRandVal(MAX)).padStart(2, "0");
 
 			for (const vertex of vertices) {
 				const pos = calculateAxis(axis, midPos, vertex);

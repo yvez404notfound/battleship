@@ -105,7 +105,7 @@ class PreparationHandler {
 		if (nextShip !== null) nextShip.classList.remove("focused", "placed");
 	}
 
-	undoShipPlacement() {
+	#undoShipPlacement() {
 		if (this.#shipPlacement.idx === 0) return;
 
 		this.#undoCurrentShipState();
@@ -118,8 +118,8 @@ class PreparationHandler {
 
 		this.#destroyPlacedShips(currShipCoords);
 
-		console.log("Ship location removed: ", this.#userData.shipsData);
-		console.log("Current ship: ", this.#currentShip);
+		// console.log("Ship location removed: ", this.#userData.shipsData);
+		// console.log("Current ship: ", this.#currentShip);
 	}
 
 	#areCellsOccupied(cells) {
@@ -132,7 +132,7 @@ class PreparationHandler {
 		return hasChild;
 	}
 
-	renderCurrentShipToGameboard(position, state) {
+	#renderCurrentShipToGameboard(position, state) {
 		let cellsToBeFilled = [];
 		const currentShipPositionVertices =
 			this.#SHIP_POSITION_VERTICES[this.#currentShip];
@@ -164,7 +164,7 @@ class PreparationHandler {
 			if ((areCellsOccupied && !isCellReady) || isOutOfBounds)
 				cell.classList.add("illegal");
 
-			if (isCellReady) cell.classList.remove("illegal");
+			if (isCellReady) cell.classList.remove("illegal", "placeholder");
 
 			const img = document.createElement("img");
 			img.classList = imgSpriteClass;
@@ -173,7 +173,7 @@ class PreparationHandler {
 		});
 	}
 
-	destroyCurrentShipToGameboard(position) {
+	#destroyCurrentShipToGameboard(position) {
 		const currentShipPositionVertices =
 			this.#SHIP_POSITION_VERTICES[this.#currentShip];
 		let cellsToBeDestroyed = [];
@@ -223,7 +223,7 @@ class PreparationHandler {
 		return shipsData[shipsData.length - 1].length > 0;
 	}
 
-	recordCurrentShipData(position) {
+	#recordCurrentShipData(position) {
 		if (this.#areAllShipsPlaced())
 			return alert("All ships are already placed.");
 
@@ -251,14 +251,14 @@ class PreparationHandler {
 		if (this.#areCellsOccupied(cellsToBeFilled))
 			return alert("Coordinates already occupied by other ship.");
 
-		this.renderCurrentShipToGameboard(position, "ready");
+		this.#renderCurrentShipToGameboard(position, "ready");
 		this.#updateShipIndicators(this.#shipPlacement.idx);
 
 		this.#userData.shipsData[this.#currentShip].coords = coordinates;
 		this.#userData.shipsData[this.#currentShip].axis = this.#shipPlacement.axis;
 
-		console.log("Ship location inserted: ", this.#currentShip);
-		console.table(this.#userData.shipsData[this.#currentShip]);
+		// console.log("Ship location inserted: ", this.#currentShip);
+		// console.table(this.#userData.shipsData[this.#currentShip]);
 
 		this.#updateCurrentShipState();
 	}
@@ -277,13 +277,13 @@ class PreparationHandler {
 	#rotateBtnEvent(buttonEl) {
 		buttonEl.addEventListener("click", () => {
 			this.#shipPlacement.axis = this.#shipPlacement.axis === "x" ? "y" : "x";
-			console.log("Ship placement axis changed: ", this.#shipPlacement.axis);
+			// console.log("Ship placement axis changed: ", this.#shipPlacement.axis);
 		});
 	}
 
 	#undoBtnEvent(buttonEl) {
 		buttonEl.addEventListener("click", () => {
-			this.undoShipPlacement();
+			this.#undoShipPlacement();
 		});
 	}
 
@@ -292,7 +292,7 @@ class PreparationHandler {
 			if (this.#areAllShipsPlaced()) return;
 
 			const position = e.target.dataset.position;
-			this.renderCurrentShipToGameboard(position, "placeholder");
+			this.#renderCurrentShipToGameboard(position, "placeholder");
 		});
 	}
 
@@ -301,19 +301,16 @@ class PreparationHandler {
 			if (this.#areAllShipsPlaced()) return;
 
 			const position = e.target.dataset.position;
-			this.destroyCurrentShipToGameboard(position);
+			this.#destroyCurrentShipToGameboard(position);
 		});
 	}
 
 	#gameboardCellClickEvent(cell) {
 		cell.addEventListener("click", (e) => {
-			let targetEl = e.target;
-
-			if (!targetEl.classList.contains("cell"))
-				targetEl = e.target.parentElement;
+			let targetEl = e.currentTarget;
 
 			const position = targetEl.dataset.position;
-			this.recordCurrentShipData(position);
+			this.#recordCurrentShipData(position);
 		});
 	}
 
@@ -327,9 +324,10 @@ class PreparationHandler {
 
 	#confirmPreparationEvent(buttonElement, nameInputEl) {
 		buttonElement.addEventListener("click", () => {
+			if (this.#userData.name === "") return nameInputEl.reportValidity();
+
 			if (!this.#areAllShipsPlaced())
 				return alert("Place all the ships first.");
-			if (this.#userData.name === "") return nameInputEl.reportValidity();
 
 			this.#robotData = {
 				name: "Robot",
@@ -339,7 +337,7 @@ class PreparationHandler {
 				),
 			};
 
-			console.log("Generated data for Robot player: ", this.#robotData);
+			// console.log("Generated data for Robot player: ", this.#robotData);
 
 			ScreenManager.setUserData(this.#userData);
 			ScreenManager.setRobotData(this.#robotData);
