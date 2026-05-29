@@ -1,6 +1,7 @@
 import { SHIP } from "../../../assets/imgs/ships/sprites/shipAssets";
 import { mockRobotData, mockUserData } from "../../../data/player";
 import gameUI from "../../../pages/game";
+import { generateRandVal } from "../../../utils/random";
 import GameMaster from "../../gameMaster/gameMaster";
 import ScreenManager from "../screenManager/screenManager";
 
@@ -51,7 +52,7 @@ class GameHandler {
 			`.player-game-info:last-child .player-name > span > .turn-indicator`,
 		);
 
-		console.log("Current Player Type", currentPlayerType);
+		// console.log("Current Player Type", currentPlayerType);
 
 		if (currentPlayerType === "human") {
 			playerTurnIndicatorEl.classList.remove("hidden");
@@ -88,19 +89,37 @@ class GameHandler {
 		this.#renderName(this.#robotData.name);
 
 		this.#renderTurnIndicator();
+
+		if (this.#gameMaster.getCurrentPlayer().getType() === "robot")
+			this.#takeTurnRobot();
+	}
+
+	#takeTurnRobot() {
+		let turnInfo;
+		const pos = String(generateRandVal(99)).padStart(2, "0");
+
+		setTimeout(() => {
+			turnInfo = this.#gameMaster.takeTurn(pos);
+			this.#renderTurnIndicator();
+		}, 1500);
+
+		return turnInfo;
 	}
 
 	#gameboardCellsClickEvent(cells) {
 		cells.forEach((cell) => {
 			cell.addEventListener("click", (e) => {
+				if (this.#gameMaster.getCurrentPlayer().getType() === "human")
+					console.log("Player turn");
+
 				const { position } = e.currentTarget.dataset;
 
 				const turnInfo = this.#gameMaster.takeTurn(position);
-				console.log("\n");
-				console.log("Turn info: ", turnInfo);
-				console.log("\n");
 
 				this.#renderTurnIndicator();
+
+				if (this.#gameMaster.getCurrentPlayer().getType() === "robot")
+					this.#takeTurnRobot();
 			});
 		});
 	}

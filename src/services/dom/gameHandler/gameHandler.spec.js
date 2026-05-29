@@ -119,8 +119,6 @@ describe("Game Handler unit test", () => {
 	};
 	let gameHandler;
 
-	jest.spyOn(randomUtils, "generateRandVal").mockReturnValue(0);
-
 	beforeEach(() => {
 		document.body.innerHTML = "";
 
@@ -128,6 +126,8 @@ describe("Game Handler unit test", () => {
 
 		ScreenManager.setUserData(mockUserData);
 		ScreenManager.setRobotData(mockRobotData);
+
+		jest.spyOn(randomUtils, "generateRandVal").mockReturnValue(0);
 
 		jest.clearAllMocks();
 	});
@@ -198,6 +198,12 @@ describe("Game Handler unit test", () => {
 			);
 
 			takeTurn = jest.spyOn(GameMaster.prototype, "takeTurn");
+
+			jest.useFakeTimers();
+		});
+
+		afterEach(() => {
+			jest.useRealTimers();
 		});
 
 		describe("Gameboard cell events", () => {
@@ -205,6 +211,15 @@ describe("Game Handler unit test", () => {
 				test("should start the turn", () => {
 					targetCell.click();
 					expect(takeTurn).toHaveBeenCalledWith("00");
+				});
+
+				test("should take turn again if next the current player after turn is Robot", () => {
+					targetCell.click();
+					expect(takeTurn).toHaveBeenCalledWith("00");
+
+					jest.advanceTimersByTime(1501);
+
+					expect(takeTurn).toHaveBeenCalledTimes(2);
 				});
 			});
 		});
