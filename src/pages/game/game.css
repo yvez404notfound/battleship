@@ -33,6 +33,19 @@ body.game {
 				span:first-child {
 					font-size: calc(var(--text-size) * 1.5) !important;
 				}
+
+				.turn-indicator {
+					margin-left: 0.25rem;
+					padding: 0.25rem;
+					border-radius: 2px;
+					background-color: rgb(var(--success));
+					color: rgb(var(--on-success));
+					font-size: calc(var(--text-size) * 0.75);
+				}
+
+				.turn-indicator.hidden {
+					display: none;
+				}
 			}
 
 			& > .forfeit-btn {

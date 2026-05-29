@@ -18,6 +18,7 @@ jest.mock("../../../pages/game", () => {
 							<span>
 								<span class="material-symbols-outlined filled"> person </span>
 								<p>Yves</p>
+								<span class="turn-indicator hidden">Your Turn</span>
 							</span>
 							<button class="forfeit-btn error-btn-filled">
 								<span class="material-symbols-outlined"> flag_2 </span>
@@ -61,6 +62,7 @@ jest.mock("../../../pages/game", () => {
 							<span>
 								<span class="material-symbols-outlined filled"> robot_2 </span>
 								<p>Robot</p>
+								<span class="turn-indicator hidden">Your Turn</span>
 							</span>
 						</div>
 					</div>
@@ -94,7 +96,7 @@ jest.mock("../../../pages/game", () => {
 					</div>
 				</div>
 			</div>
-	
+
 	`,
 	);
 });
@@ -116,6 +118,8 @@ describe("Game Handler unit test", () => {
 		shipsData: mockUserData.shipsData,
 	};
 	let gameHandler;
+
+	jest.spyOn(randomUtils, "generateRandVal").mockReturnValue(0);
 
 	beforeEach(() => {
 		document.body.innerHTML = "";
@@ -193,7 +197,6 @@ describe("Game Handler unit test", () => {
 				".player-game-info:last-child .gameboard > .cell[data-position='00']",
 			);
 
-			jest.spyOn(randomUtils, "generateRandVal").mockReturnValue(0);
 			takeTurn = jest.spyOn(GameMaster.prototype, "takeTurn");
 		});
 

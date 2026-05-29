@@ -23,6 +23,7 @@ const gameUI = () => {
 							<span>
 								<span class="material-symbols-outlined filled"> person </span>
 								<p>Yves</p>
+								<span class="turn-indicator hidden">Your Turn</span>
 							</span>
 							<button class="forfeit-btn error-btn-filled">
 								<span class="material-symbols-outlined"> flag_2 </span>
@@ -76,6 +77,7 @@ const gameUI = () => {
 							<span>
 								<span class="material-symbols-outlined filled"> robot_2 </span>
 								<p>Robot</p>
+								<span class="turn-indicator hidden">Your Turn</span>
 							</span>
 						</div>
 					</div>

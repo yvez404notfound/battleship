@@ -41,6 +41,27 @@ class GameHandler {
 		playerNameEl.textContent = name;
 	}
 
+	#renderTurnIndicator() {
+		const currentPlayerType = this.#gameMaster.getCurrentPlayer().getType();
+
+		const playerTurnIndicatorEl = this.bodyEl.querySelector(
+			`.player-game-info:first-child .player-name > span > .turn-indicator`,
+		);
+		const enemyTurnIndicatorEl = this.bodyEl.querySelector(
+			`.player-game-info:last-child .player-name > span > .turn-indicator`,
+		);
+
+		console.log("Current Player Type", currentPlayerType);
+
+		if (currentPlayerType === "human") {
+			playerTurnIndicatorEl.classList.remove("hidden");
+			enemyTurnIndicatorEl.classList.add("hidden");
+		} else {
+			enemyTurnIndicatorEl.classList.remove("hidden");
+			playerTurnIndicatorEl.classList.add("hidden");
+		}
+	}
+
 	renderPage() {
 		this.bodyEl.innerHTML = gameUI();
 		this.bodyEl.classList.add("game");
@@ -65,6 +86,8 @@ class GameHandler {
 			"placed",
 		);
 		this.#renderName(this.#robotData.name);
+
+		this.#renderTurnIndicator();
 	}
 
 	#gameboardCellsClickEvent(cells) {
@@ -76,13 +99,15 @@ class GameHandler {
 				console.log("\n");
 				console.log("Turn info: ", turnInfo);
 				console.log("\n");
+
+				this.#renderTurnIndicator();
 			});
 		});
 	}
 
 	bindEvents() {
 		const enemyGameboardCells = this.bodyEl.querySelectorAll(
-			".player-game-info:last-child > .gameboard .cell",
+			".player-game-info:last-child > .gameboard > .cell",
 		);
 
 		this.#gameboardCellsClickEvent(enemyGameboardCells);

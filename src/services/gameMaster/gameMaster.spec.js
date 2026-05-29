@@ -13,13 +13,14 @@ describe("Gamemaster class unit tests", () => {
 			},
 		},
 	};
+	let turnVal;
 
 	beforeEach(() => {
 		gameMaster = new GameMaster();
 
 		jest.spyOn(randomUtils, "generateRandVal").mockReturnValue(0);
 
-		gameMaster.initGame(mockUserData, mockUserData);
+		turnVal = gameMaster.initGame(mockUserData, mockUserData);
 	});
 
 	describe("initGame()", () => {
