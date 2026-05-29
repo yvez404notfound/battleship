@@ -7,13 +7,13 @@ import ScreenManager from "../screenManager/screenManager";
 class GameHandler {
 	#userData;
 	#robotData;
-	gameMaster;
+	#gameMaster;
 
 	constructor(data) {
 		this.bodyEl = document.querySelector("body");
 	}
 
-	renderShipsToGameboard(shipsData, playerName, state) {
+	#renderShipsToGameboard(shipsData, playerName, state) {
 		const gameboardEl = this.bodyEl.querySelector(
 			`.player-game-info:${playerName.toLowerCase() === "robot" ? "last-child" : "first-child"} > .gameboard`,
 		);
@@ -33,7 +33,7 @@ class GameHandler {
 		});
 	}
 
-	renderName(name) {
+	#renderName(name) {
 		const playerNameEl = this.bodyEl.querySelector(
 			`.player-game-info:${name.toLowerCase() === "robot" ? "last-child" : "first-child"} .player-name > span > p`,
 		);
@@ -46,33 +46,33 @@ class GameHandler {
 		this.bodyEl.classList.add("game");
 		this.bodyEl.classList.remove("start", "preparation");
 
-		// this.#userData = ScreenManager.getUserData();
-		// this.#robotData = ScreenManager.getRobotData();
+		this.#userData = ScreenManager.getUserData();
+		this.#robotData = ScreenManager.getRobotData();
 
-		this.gameMaster = new GameMaster();
-		this.gameMaster.initGame(mockUserData, mockRobotData);
+		this.#gameMaster = new GameMaster();
+		this.#gameMaster.initGame(this.#userData, this.#robotData);
 
-		this.renderShipsToGameboard(
-			mockUserData.shipsData,
-			mockUserData.name,
+		this.#renderShipsToGameboard(
+			this.#userData.shipsData,
+			this.#userData.name,
 			"placed",
 		);
-		this.renderName(mockUserData.name);
+		this.#renderName(this.#userData.name);
 
-		this.renderShipsToGameboard(
-			mockRobotData.shipsData,
-			mockRobotData.name,
+		this.#renderShipsToGameboard(
+			this.#robotData.shipsData,
+			this.#robotData.name,
 			"placed",
 		);
-		this.renderName(mockRobotData.name);
+		this.#renderName(this.#robotData.name);
 	}
 
-	gameboardCellsClickEvent(cells) {
+	#gameboardCellsClickEvent(cells) {
 		cells.forEach((cell) => {
 			cell.addEventListener("click", (e) => {
 				const { position } = e.currentTarget.dataset;
 
-				const turnInfo = this.gameMaster.takeTurn(position);
+				const turnInfo = this.#gameMaster.takeTurn(position);
 				console.log("\n");
 				console.log("Turn info: ", turnInfo);
 				console.log("\n");
@@ -85,7 +85,7 @@ class GameHandler {
 			".player-game-info:last-child > .gameboard .cell",
 		);
 
-		this.gameboardCellsClickEvent(enemyGameboardCells);
+		this.#gameboardCellsClickEvent(enemyGameboardCells);
 	}
 }
 
