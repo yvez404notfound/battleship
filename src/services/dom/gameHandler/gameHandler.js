@@ -53,8 +53,6 @@ class GameHandler {
 			`.player-game-info:last-child .player-name > span > .turn-indicator`,
 		);
 
-		// console.log("Current Player Type", currentPlayerType);
-
 		if (currentPlayerType === "human") {
 			playerTurnIndicatorEl.classList.remove("hidden");
 			enemyTurnIndicatorEl.classList.add("hidden");
@@ -107,9 +105,38 @@ class GameHandler {
 		cell.replaceChildren(img);
 	}
 
+	#updateShipIndicators(shipsLeft, shipIndicators) {
+		const shipTypesLeft = Object.values(shipsLeft).map((ship) =>
+			ship._type.toLowerCase().replace(" ", "-"),
+		);
+
+		shipIndicators.forEach((ship) => {
+			if (!shipTypesLeft.includes(ship.classList[1]))
+				ship.classList.replace("focused", "destroyed");
+		});
+	}
+
+	#renderShipsLeft() {
+		const [p1, p2] = this.#gameMaster.getPlayers();
+
+		const p1ShipsLeft = p1.getShipsLeft();
+		const p1ShipIndicators = this.bodyEl.querySelectorAll(
+			`.player-game-info:first-child > .ships-indicator > .ships .ship`,
+		);
+		this.#updateShipIndicators(p1ShipsLeft, p1ShipIndicators);
+
+		const p2ShipsLeft = p2.getShipsLeft();
+		const p2ShipsIndicators = this.bodyEl.querySelectorAll(
+			`.player-game-info:last-child > .ships-indicator > .ships .ship`,
+		);
+		this.#updateShipIndicators(p2ShipsLeft, p2ShipsIndicators);
+	}
+
 	#updatePage(turnInfo, cell) {
 		this.#renderTurnIndicator();
 		this.#renderCellStatus(turnInfo.missed, cell);
+
+		this.#renderShipsLeft();
 	}
 
 	#takeTurnRobot() {

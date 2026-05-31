@@ -35,35 +35,38 @@ const gameUI = () => {
 						${generateGameboardCells()}
 					</div>
 					<div class="ships-indicator">
-						<div class="ship focused">
-							<img
-								class="svg"
-								src="${aircraftCarrierIcon}"
-								alt="Aircraft Carrier logo" />
-						</div>
-						<div class="ship focused">
-							<img
-								class="svg"
-								src="${battleshipIcon}"
-								alt="Battleship logo" />
-						</div>
-						<div class="ship focused">
-							<img
-								class="svg"
-								src="${cruiserShipIcon}"
-								alt="Cruiser logo" />
-						</div>
-						<div class="ship focused">
-							<img
-								class="svg"
-								src="${destroyerIcon}"
-								alt="Destroyer logo" />
-						</div>
-						<div class="ship focused">
-							<img
-								class="svg"
-								src="${submarineIcon}"
-								alt="Submarine logo" />
+						<p class="label">Ships left:</p>
+						<div class="ships">
+							<div class="ship aircraft-carrier focused">
+								<img
+									class="svg"
+									src="${aircraftCarrierIcon}"
+									alt="Aircraft Carrier logo" />
+							</div>
+							<div class="ship battleship focused">
+								<img
+									class="svg"
+									src="${battleshipIcon}"
+									alt="Battleship logo" />
+							</div>
+							<div class="ship cruiser focused">
+								<img
+									class="svg"
+									src="${cruiserShipIcon}"
+									alt="Cruiser logo" />
+							</div>
+							<div class="ship destroyer focused">
+								<img
+									class="svg"
+									src="${destroyerIcon}"
+									alt="Destroyer logo" />
+							</div>
+							<div class="ship submarine focused">
+								<img
+									class="svg"
+									src="${submarineIcon}"
+									alt="Submarine logo" />
+							</div>
 						</div>
 					</div>
 				</div>
@@ -85,35 +88,38 @@ const gameUI = () => {
 						${generateGameboardCells()}
 					</div>
 					<div class="ships-indicator">
-						<div class="ship focused">
-							<img
-								class="svg"
-								src="${aircraftCarrierIcon}"
-								alt="Aircraft Carrier logo" />
-						</div>
-						<div class="ship focused">
-							<img
-								class="svg"
-								src="${battleshipIcon}"
-								alt="Battleship logo" />
-						</div>
-						<div class="ship focused">
-							<img
-								class="svg"
-								src="${cruiserShipIcon}"
-								alt="Cruiser logo" />
-						</div>
-						<div class="ship focused">
-							<img
-								class="svg"
-								src="${destroyerIcon}"
-								alt="Destroyer logo" />
-						</div>
-						<div class="ship focused">
-							<img
-								class="svg"
-								src="${submarineIcon}"
-								alt="Submarine logo" />
+						<p class="label">Ships left:</p>
+						<div class="ships">
+							<div class="ship aircraft-carrier focused">
+								<img
+									class="svg"
+									src="${aircraftCarrierIcon}"
+									alt="Aircraft Carrier logo" />
+							</div>
+							<div class="ship battleship focused">
+								<img
+									class="svg"
+									src="${battleshipIcon}"
+									alt="Battleship logo" />
+							</div>
+							<div class="ship cruiser focused">
+								<img
+									class="svg"
+									src="${cruiserShipIcon}"
+									alt="Cruiser logo" />
+							</div>
+							<div class="ship destroyer focused">
+								<img
+									class="svg"
+									src="${destroyerIcon}"
+									alt="Destroyer logo" />
+							</div>
+							<div class="ship submarine focused">
+								<img
+									class="svg"
+									src="${submarineIcon}"
+									alt="Submarine logo" />
+							</div>
 						</div>
 					</div>
 				</div>

@@ -68,12 +68,14 @@ body.game {
 		.ships-indicator {
 			--ship-size: 1.75rem;
 
-			display: flex;
-			gap: 0.5rem;
+			& > .ships {
+				display: flex;
+				gap: 0.5rem;
 
-			.ship {
-				height: var(--ship-size);
-				width: var(--ship-size);
+				.ship {
+					height: var(--ship-size);
+					width: var(--ship-size);
+				}
 			}
 		}
 	}

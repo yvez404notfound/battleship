@@ -5,6 +5,7 @@ import { createHumanPlayer, createRobotPlayer } from "./playerFactory";
 import {
 	attack,
 	getGameboard,
+	getShipsLeft,
 	getType,
 	initShips,
 	isDead,
@@ -29,7 +30,8 @@ describe("Player class unit test", () => {
 				.inject(getType)
 				.inject(initShips)
 				.inject(isDead)
-				.inject(isPositionAttacked);
+				.inject(isPositionAttacked)
+				.inject(getShipsLeft);
 		});
 
 		describe("initShips()", () => {

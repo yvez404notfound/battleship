@@ -21,16 +21,18 @@ const attack = (state) => ({
 	},
 });
 
-const getShipsLeft = (ships) => {
-	const s = ships.filter((ship) => {
-		if (!ship.isSunk()) return ship;
-	});
-	return s;
-};
+const getShipsLeft = (state) => ({
+	getShipsLeft() {
+		const s = state._ships.filter((ship) => {
+			if (!ship.isSunk()) return ship;
+		});
+		return s;
+	},
+});
 
 const isDead = (state) => ({
 	isDead() {
-		const shipsLeft = getShipsLeft(state._ships);
+		const shipsLeft = state.getShipsLeft();
 		return shipsLeft.length <= 0 ? true : false;
 	},
 });
@@ -53,4 +55,12 @@ const getType = () => ({
 	},
 });
 
-export { attack, getGameboard, getType, initShips, isDead, isPositionAttacked };
+export {
+	attack,
+	getGameboard,
+	getShipsLeft,
+	getType,
+	initShips,
+	isDead,
+	isPositionAttacked,
+};

@@ -2,6 +2,7 @@ import Player from "./player.js";
 import {
 	attack,
 	getGameboard,
+	getShipsLeft,
 	getType,
 	initShips,
 	isDead,
@@ -15,7 +16,8 @@ const createHumanPlayer = function (name, gameboard) {
 		.inject(isDead)
 		.inject(isPositionAttacked)
 		.inject(getGameboard)
-		.inject(getType);
+		.inject(getType)
+		.inject(getShipsLeft);
 };
 
 const createRobotPlayer = function (gameboard) {
@@ -25,7 +27,8 @@ const createRobotPlayer = function (gameboard) {
 		.inject(isDead)
 		.inject(isPositionAttacked)
 		.inject(getGameboard)
-		.inject(getType);
+		.inject(getType)
+		.inject(getShipsLeft);
 };
 
 export { createHumanPlayer, createRobotPlayer };
