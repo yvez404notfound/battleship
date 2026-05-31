@@ -35,17 +35,27 @@
 		background-color: rgba(var(--error) / 0.5);
 	}
 
-	.ship-sprite {
+	.ship-sprite,
+	.attack-indicator {
 		width: 100%;
 		height: 100%;
+	}
+
+	.ship-sprite.hidden {
+		display: none;
 	}
 
 	.ship-sprite.x {
 		transform: rotate(270deg);
 	}
 
-	.ship-sprite.y {
-		/* transform: rotate(180deg); */
+	/* 
+	.attack-indicator.hit {
+	} 
+	*/
+
+	.attack-indicator.miss {
+		opacity: 0.5;
 	}
 }
 

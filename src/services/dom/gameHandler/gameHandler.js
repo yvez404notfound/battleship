@@ -1,3 +1,4 @@
+import ATTACK_INDICATORS from "../../../assets/imgs/indicators/attackIndicators";
 import { SHIP } from "../../../assets/imgs/ships/sprites/shipAssets";
 import { mockRobotData, mockUserData } from "../../../data/player";
 import gameUI from "../../../pages/game";
@@ -84,7 +85,7 @@ class GameHandler {
 		this.#renderShipsToGameboard(
 			this.#robotData.shipsData,
 			this.#robotData.name,
-			"placed",
+			"hidden",
 		);
 		this.#renderName(this.#robotData.name);
 
@@ -94,13 +95,41 @@ class GameHandler {
 			this.#takeTurnRobot();
 	}
 
+	#renderCellStatus(missed, cell) {
+		const { hit, miss } = ATTACK_INDICATORS;
+		const className = Object.keys(ATTACK_INDICATORS);
+
+		const img = document.createElement("img");
+		img.src = missed ? miss : hit;
+		img.alt = "Ship indicator";
+		img.className = `attack-indicator ${missed ? className[1] : className[0]}`;
+
+		cell.replaceChildren(img);
+	}
+
+	#updatePage(turnInfo, cell) {
+		this.#renderTurnIndicator();
+		this.#renderCellStatus(turnInfo.missed, cell);
+	}
+
 	#takeTurnRobot() {
 		let turnInfo;
-		const pos = String(generateRandVal(99)).padStart(2, "0");
 
 		setTimeout(() => {
+			const pos = String(generateRandVal(99)).padStart(2, "0");
+			console.log("Generated random value: ", pos);
+
 			turnInfo = this.#gameMaster.takeTurn(pos);
-			this.#renderTurnIndicator();
+
+			console.log("Turn Info robot: ", turnInfo);
+
+			const cell = this.bodyEl.querySelector(
+				`.player-game-info:first-child .gameboard > .cell[data-position='${pos}']`,
+			);
+
+			console.log("Cell: ", cell);
+
+			this.#updatePage(turnInfo, cell);
 		}, 1500);
 
 		return turnInfo;
@@ -109,14 +138,13 @@ class GameHandler {
 	#gameboardCellsClickEvent(cells) {
 		cells.forEach((cell) => {
 			cell.addEventListener("click", (e) => {
-				if (this.#gameMaster.getCurrentPlayer().getType() === "human")
-					console.log("Player turn");
+				if (this.#gameMaster.getCurrentPlayer().getType() === "robot") return;
 
 				const { position } = e.currentTarget.dataset;
 
 				const turnInfo = this.#gameMaster.takeTurn(position);
-
-				this.#renderTurnIndicator();
+				console.log("Turn info: ", turnInfo);
+				this.#updatePage(turnInfo, cell);
 
 				if (this.#gameMaster.getCurrentPlayer().getType() === "robot")
 					this.#takeTurnRobot();
