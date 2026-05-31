@@ -68,13 +68,15 @@ class GameMaster {
 	}
 
 	takeTurn(position) {
+		const enemyGameboard = this.getEnemyPlayer().getGameboard();
+
 		if (this.#playerInCurrentTurn.isPositionAttacked(position))
 			return {
 				success: false,
+				missed: this.didAttackMissed(position, enemyGameboard),
 				message: "already_attacked",
 			};
 
-		const enemyGameboard = this.getEnemyPlayer().getGameboard();
 		this.#playerInCurrentTurn.attack(position, enemyGameboard);
 
 		const missed = this.didAttackMissed(position, enemyGameboard);

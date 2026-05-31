@@ -141,20 +141,20 @@ class GameHandler {
 
 	#takeTurnRobot() {
 		let turnInfo;
+		let pos;
 
 		setTimeout(() => {
-			const pos = String(generateRandVal(99)).padStart(2, "0");
-			console.log("Generated random value: ", pos);
+			while (!turnInfo?.success || !turnInfo) {
+				pos = String(generateRandVal(99)).padStart(2, "0");
+				console.log("Generated random value: ", pos);
 
-			turnInfo = this.#gameMaster.takeTurn(pos);
-
-			console.log("Turn Info robot: ", turnInfo);
+				turnInfo = this.#gameMaster.takeTurn(pos);
+				console.log("Turn Info robot again: ", turnInfo);
+			}
 
 			const cell = this.bodyEl.querySelector(
 				`.player-game-info:first-child .gameboard > .cell[data-position='${pos}']`,
 			);
-
-			console.log("Cell: ", cell);
 
 			this.#updatePage(turnInfo, cell);
 		}, 1500);
@@ -165,7 +165,8 @@ class GameHandler {
 	#gameboardCellsClickEvent(cells) {
 		cells.forEach((cell) => {
 			cell.addEventListener("click", (e) => {
-				if (this.#gameMaster.getCurrentPlayer().getType() === "robot") return;
+				let currentPlayerType = this.#gameMaster.getCurrentPlayer().getType();
+				if (currentPlayerType === "robot") return;
 
 				const { position } = e.currentTarget.dataset;
 
@@ -173,8 +174,8 @@ class GameHandler {
 				console.log("Turn info: ", turnInfo);
 				this.#updatePage(turnInfo, cell);
 
-				if (this.#gameMaster.getCurrentPlayer().getType() === "robot")
-					this.#takeTurnRobot();
+				currentPlayerType = this.#gameMaster.getCurrentPlayer().getType();
+				if (currentPlayerType === "robot") this.#takeTurnRobot();
 			});
 		});
 	}
