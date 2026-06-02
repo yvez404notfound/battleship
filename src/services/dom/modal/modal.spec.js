@@ -6,6 +6,7 @@ import ScreenManager from "../screenManager/screenManager.js";
 import Modal from "./modal.js";
 
 //#region  Mocks
+jest.mock("../../../utils/asset.js");
 const winnerModalUI = `
 		<dialog class="winner-modal">
 			<div class="icon" aria-hidden="true">
@@ -56,15 +57,24 @@ const defeatModalUI = `
 //#region Unit Test
 describe("Modal class unit test", () => {
 	let modal;
+	let changeState;
 
 	beforeEach(() => {
 		modal = new Modal();
-		jest.spyOn(ScreenManager, "changeState");
+		changeState = jest.spyOn(ScreenManager, "changeState");
+
+		HTMLDialogElement.prototype.showModal = jest.fn();
+		HTMLDialogElement.prototype.close = jest.fn();
+
+		jest.clearAllMocks();
+	});
+
+	afterEach(() => {
+		jest.restoreAllMocks();
 	});
 
 	describe("renderWinnerModal()", () => {
 		beforeEach(() => {
-			document.body.innerHTML = winnerModalUI;
 			modal.renderWinnerModal();
 		});
 
@@ -78,7 +88,7 @@ describe("Modal class unit test", () => {
 					const giveUpBtn = document.querySelector("button.give-up");
 					giveUpBtn.click();
 
-					expect(ScreenManager.changeState).toHaveBeenCalled();
+					expect(changeState).toHaveBeenCalledWith("HOME");
 					expect(document.body.classList.contains("start")).toBeTruthy();
 				});
 			});
@@ -88,7 +98,7 @@ describe("Modal class unit test", () => {
 					const tryAgain = document.querySelector("button.try-again");
 					tryAgain.click();
 
-					expect(ScreenManager.changeState).toHaveBeenCalled();
+					expect(changeState).toHaveBeenCalledWith("PREPARATION");
 					expect(document.body.classList.contains("preparation")).toBeTruthy();
 				});
 			});
@@ -97,7 +107,6 @@ describe("Modal class unit test", () => {
 
 	describe("renderDefeatModal()", () => {
 		beforeEach(() => {
-			document.body.innerHTML = defeatModalUI;
 			modal.renderDefeatModal();
 		});
 
@@ -111,7 +120,7 @@ describe("Modal class unit test", () => {
 					const giveUpBtn = document.querySelector("button.give-up");
 					giveUpBtn.click();
 
-					expect(ScreenManager.changeState).toHaveBeenCalled();
+					expect(changeState).toHaveBeenCalledWith("HOME");
 					expect(document.body.classList.contains("start")).toBeTruthy();
 				});
 			});
@@ -121,7 +130,7 @@ describe("Modal class unit test", () => {
 					const tryAgain = document.querySelector("button.try-again");
 					tryAgain.click();
 
-					expect(ScreenManager.changeState).toHaveBeenCalled();
+					expect(changeState).toHaveBeenCalledWith("PREPARATION");
 					expect(document.body.classList.contains("preparation")).toBeTruthy();
 				});
 			});

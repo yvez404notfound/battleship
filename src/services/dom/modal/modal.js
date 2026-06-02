@@ -1,3 +1,5 @@
+import ScreenManager from "../screenManager/screenManager";
+
 class Modal {
 	#bodyEl;
 
@@ -5,7 +7,26 @@ class Modal {
 		this.#bodyEl = document.querySelector("body");
 	}
 
-	#bindEventsToWinner() {}
+	#giveUpEvent(buttonEl) {
+		buttonEl.addEventListener("click", () => {
+			ScreenManager.changeState("HOME");
+		});
+	}
+
+	#tryAgainEvent(buttonEl) {
+		buttonEl.addEventListener("click", () => {
+			ScreenManager.changeState("PREPARATION");
+		});
+	}
+
+	#bindEvents() {
+		const giveUpBtn = document.querySelector("button.give-up");
+		const tryAgainBtn = document.querySelector("button.try-again");
+
+		this.#giveUpEvent(giveUpBtn);
+		this.#tryAgainEvent(tryAgainBtn);
+	}
+
 	#renderWinnerUI() {
 		return `
 		<dialog class="winner-modal">
@@ -29,9 +50,15 @@ class Modal {
 		</dialog>
 		`;
 	}
-	renderWinnerModal() {}
+	renderWinnerModal() {
+		this.#bodyEl.innerHTML += this.#renderWinnerUI();
 
-	#bindEventsToDefeat() {}
+		const modal = this.#bodyEl.querySelector(".winner-modal");
+		modal.showModal();
+
+		this.#bindEvents();
+	}
+
 	#renderDefeatUI() {
 		return `
 		<dialog class="defeat-modal">
@@ -58,7 +85,14 @@ class Modal {
 		</dialog>
 		`;
 	}
-	renderDefeatModal() {}
+	renderDefeatModal() {
+		this.#bodyEl.innerHTML += this.#renderDefeatUI();
+
+		const modal = this.#bodyEl.querySelector(".defeat-modal");
+		modal.showModal();
+
+		this.#bindEvents();
+	}
 }
 
 export default Modal;

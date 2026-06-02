@@ -4,15 +4,18 @@ import { mockRobotData, mockUserData } from "../../../data/player";
 import gameUI from "../../../pages/game";
 import { generateRandVal } from "../../../utils/random";
 import GameMaster from "../../gameMaster/gameMaster";
+import Modal from "../modal/modal";
 import ScreenManager from "../screenManager/screenManager";
 
 class GameHandler {
 	#userData;
 	#robotData;
 	#gameMaster;
+	#modalHandler;
 
 	constructor(data) {
 		this.bodyEl = document.querySelector("body");
+		this.#modalHandler = new Modal();
 	}
 
 	#renderShipsToGameboard(shipsData, playerName, state) {
@@ -83,7 +86,7 @@ class GameHandler {
 		this.#renderShipsToGameboard(
 			this.#robotData.shipsData,
 			this.#robotData.name,
-			"hidden",
+			"placed",
 		);
 		this.#renderName(this.#robotData.name);
 
@@ -137,6 +140,16 @@ class GameHandler {
 		this.#renderCellStatus(turnInfo.missed, cell);
 
 		this.#renderShipsLeft();
+
+		if (!turnInfo.winner) return;
+
+		const winnerType = turnInfo.winner.getType();
+
+		if (winnerType === "human") {
+			this.#modalHandler.renderWinnerModal();
+		} else {
+			this.#modalHandler.renderDefeatModal();
+		}
 	}
 
 	#takeTurnRobot() {

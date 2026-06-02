@@ -16,7 +16,3 @@ import { convertAssetsToInlineSVG } from "./utils/asset.js";
 import ScreenManager from "./services/dom/screenManager/screenManager.js";
 
 ScreenManager.renderCurrentPage();
-
-// const modal = document.querySelector(".defeat-modal");
-// modal.showModal();
-// convertAssetsToInlineSVG();
