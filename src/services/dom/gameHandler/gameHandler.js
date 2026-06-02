@@ -193,12 +193,29 @@ class GameHandler {
 		});
 	}
 
+	#forfeitBtnClickEvent(buttonEl) {
+		buttonEl.addEventListener("click", () => {
+			const forfeitModal = this.bodyEl.querySelector(".forfeit-modal");
+
+			if (forfeitModal) {
+				forfeitModal.showModal();
+			} else {
+				this.#modalHandler.renderForfeitModal();
+			}
+		});
+	}
+
 	bindEvents() {
 		const enemyGameboardCells = this.bodyEl.querySelectorAll(
 			".player-game-info:last-child > .gameboard > .cell",
 		);
 
+		const forfeitBtn = this.bodyEl.querySelector(
+			".player-game-info:first-child .forfeit-btn",
+		);
+
 		this.#gameboardCellsClickEvent(enemyGameboardCells);
+		this.#forfeitBtnClickEvent(forfeitBtn);
 	}
 }
 

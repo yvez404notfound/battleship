@@ -65,6 +65,7 @@ describe("Modal class unit test", () => {
 
 		HTMLDialogElement.prototype.showModal = jest.fn();
 		HTMLDialogElement.prototype.close = jest.fn();
+		HTMLFormElement.prototype.requestSubmit = jest.fn();
 
 		jest.clearAllMocks();
 	});
@@ -132,6 +133,47 @@ describe("Modal class unit test", () => {
 
 					expect(changeState).toHaveBeenCalledWith("PREPARATION");
 					expect(document.body.classList.contains("preparation")).toBeTruthy();
+				});
+			});
+		});
+	});
+
+	describe("renderForfeitModal()", () => {
+		beforeEach(() => {
+			modal.renderForfeitModal();
+		});
+
+		test("should render forfeit modal UI", () => {
+			expect(document.body.innerHTML).toContain("forfeit-modal");
+		});
+
+		describe("DOM events", () => {
+			describe("Give Up button", () => {
+				test("should navigate to homepage", () => {
+					const giveUpBtn = document.querySelector("button.give-up");
+					giveUpBtn.click();
+
+					expect(changeState).toHaveBeenCalledWith("HOME");
+					expect(document.body.classList.contains("start")).toBeTruthy();
+				});
+			});
+
+			describe("Try Again button", () => {
+				test("should navigate to preparation page", () => {
+					const tryAgain = document.querySelector("button.try-again");
+					tryAgain.click();
+
+					expect(changeState).toHaveBeenCalledWith("PREPARATION");
+					expect(document.body.classList.contains("preparation")).toBeTruthy();
+				});
+			});
+
+			describe("Close button", () => {
+				test("should close the modal", () => {
+					const closeModalBtn = document.querySelector("button.close-modal");
+					closeModalBtn.click();
+
+					expect(HTMLDialogElement.prototype.close).toHaveBeenCalled();
 				});
 			});
 		});
