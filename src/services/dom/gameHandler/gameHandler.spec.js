@@ -217,10 +217,15 @@ describe("Game Handler unit test", () => {
 					targetCell.click();
 					expect(takeTurn).toHaveBeenCalledWith("00");
 
+					targetCell.click();
+					expect(takeTurn).not.toHaveBeenCalledTimes(2);
+
 					jest.advanceTimersByTime(1501);
 
 					expect(takeTurn).toHaveBeenCalledTimes(2);
 				});
+
+				describe("Should update page UI after successful turn", () => {});
 			});
 		});
 	});

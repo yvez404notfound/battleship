@@ -1,0 +1,86 @@
+dialog::backdrop {
+	background-color: rgb(var(--scrim) / 0.5);
+}
+
+dialog[class*="modal"] {
+	min-width: 300px;
+	background-color: rgb(var(--surface-bright));
+	border-radius: 0.25rem;
+	display: grid;
+	place-items: center;
+	gap: 1rem;
+	padding: 1rem;
+
+	> .icon {
+		--icon-size: 2.25rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		width: var(--icon-size);
+		height: var(--icon-size);
+
+		background-color: rgb(var(--primary));
+		border-radius: 0.25rem;
+
+		> span {
+			color: rgb(var(--gold));
+			font-size: calc(var(--icon-size) * 0.75);
+			margin: 0.25rem;
+		}
+
+		> svg path {
+			fill: rgb(var(--primary));
+		}
+	}
+
+	> .header {
+		padding: 0rem;
+
+		> h2 {
+			font-family: "Rubik Dirt";
+			text-align: center;
+			font-size: 2.25rem;
+		}
+
+		> p {
+			text-align: center;
+			font-size: 0.75rem;
+		}
+	}
+
+	> .buttons {
+		padding-top: 0.5rem;
+		border-top: 1px solid rgb(var(--outline));
+		display: flex;
+		gap: 0.5rem;
+		width: 100%;
+
+		> button {
+			--text-size: 0.75rem;
+			font-size: var(--text-size);
+			flex-grow: 1;
+			padding: 1rem;
+
+			> span:first-child {
+				font-size: var(--text-size);
+			}
+		}
+	}
+}
+
+dialog.defeat-modal {
+	> .icon {
+		background: none;
+	}
+
+	> .header {
+		> h2 {
+			color: rgb(var(--error));
+		}
+
+		> p {
+			font-size: 10px;
+		}
+	}
+}

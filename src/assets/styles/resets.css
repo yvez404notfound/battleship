@@ -23,3 +23,7 @@ a {
 a:hover {
 	text-decoration: underline;
 }
+
+dialog {
+	border: none;
+}

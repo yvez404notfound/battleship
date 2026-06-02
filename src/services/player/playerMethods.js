@@ -8,7 +8,6 @@ const initShips = (state) => ({
 			const ship = createShip(type, coords);
 			state._ships.push(ship);
 
-			// Place ship to gameboard
 			state._gameboard.placeShip(ship, ship._coordinates);
 		});
 	},

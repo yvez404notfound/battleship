@@ -64,6 +64,17 @@ describe("Player class unit test", () => {
 			});
 		});
 
+		describe("getShipLeft", () => {
+			test("should return all alive ships player have", () => {
+				player.initShips(shipsData);
+
+				const shipsLeft = player.getShipsLeft();
+
+				expect(player._ships).toHaveLength(5);
+				expect(player._ships[0]).toBeInstanceOf(Ship);
+			});
+		});
+
 		describe("isDead()", () => {
 			let testShip;
 
