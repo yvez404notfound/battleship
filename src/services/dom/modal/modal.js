@@ -1,4 +1,6 @@
 class Modal {
+	#bodyEl;
+
 	constructor() {
 		this.#bodyEl = document.querySelector("body");
 	}
@@ -15,11 +17,11 @@ class Modal {
 				<p>You destroyed all enemy ships.</p>
 			</div>
 			<div class="buttons">
-				<button class="error-btn-tonal">
+				<button class="give-up error-btn-tonal">
 					<span class="material-symbols-outlined"> anchor </span>
 					<p>Give Up</p>
 				</button>
-				<button class="primary-btn-filled">
+				<button class="try-again primary-btn-filled">
 					<span class="material-symbols-outlined"> directions_boat </span>
 					<p>Try Again</p>
 				</button>
@@ -27,9 +29,9 @@ class Modal {
 		</dialog>
 		`;
 	}
-	renderWinner(winner) {}
+	renderWinnerModal() {}
 
-	#bindEventsToForfeit() {}
+	#bindEventsToDefeat() {}
 	#renderDefeatUI() {
 		return `
 		<dialog class="defeat-modal">
@@ -44,11 +46,11 @@ class Modal {
 				<p>The enemy have destroyed all your ships.</p>
 			</div>
 			<div class="buttons">
-				<button class="error-btn-tonal">
+				<button class="give-up error-btn-tonal">
 					<span class="material-symbols-outlined"> anchor </span>
 					<p>Give Up</p>
 				</button>
-				<button class="primary-btn-filled">
+				<button class="try-again primary-btn-filled">
 					<span class="material-symbols-outlined"> directions_boat </span>
 					<p>Try Again</p>
 				</button>
@@ -56,7 +58,7 @@ class Modal {
 		</dialog>
 		`;
 	}
-	renderUI() {}
+	renderDefeatModal() {}
 }
 
 export default Modal;
