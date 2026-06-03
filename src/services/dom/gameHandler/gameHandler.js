@@ -86,7 +86,7 @@ class GameHandler {
 		this.#renderShipsToGameboard(
 			this.#robotData.shipsData,
 			this.#robotData.name,
-			"placed",
+			"hidden",
 		);
 		this.#renderName(this.#robotData.name);
 
