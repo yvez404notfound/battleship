@@ -25,7 +25,7 @@ describe("Screen Manager unit test", () => {
 
 	describe("renderCurrentPage()", () => {
 		beforeEach(() => {
-			ScreenManager.renderCurrentPage();
+			ScreenManager.changeState("HOME");
 		});
 
 		test("should render the page of current state", () => {

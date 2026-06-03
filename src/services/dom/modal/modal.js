@@ -9,9 +9,7 @@ class Modal {
 
 	#closeModalEvent(buttonEl, modalEl) {
 		buttonEl.addEventListener("click", () => {
-			console.log("Close button clicked, modal:", modalEl);
 			modalEl.close();
-			console.log("Modal closed");
 		});
 	}
 
@@ -32,18 +30,8 @@ class Modal {
 		const tryAgainBtn = document.querySelector("button.try-again");
 		const closeBtn = document.querySelector("button.close-modal");
 
-		console.log(
-			"Binding events - closeBtn:",
-			closeBtn,
-			"giveUpBtn:",
-			giveUpBtn,
-			"tryAgainBtn:",
-			tryAgainBtn,
-		);
-
 		if (closeBtn) {
 			const modal = this.#bodyEl.querySelector(".forfeit-modal");
-			console.log("Found forfeit modal:", modal);
 			this.#closeModalEvent(closeBtn, modal);
 		}
 
@@ -76,6 +64,7 @@ class Modal {
 		</dialog>
 		`;
 	}
+
 	renderWinnerModal() {
 		this.#bodyEl.insertAdjacentHTML("beforeend", this.#renderWinnerUI());
 

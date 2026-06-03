@@ -92,8 +92,9 @@ class GameHandler {
 
 		this.#renderTurnIndicator();
 
-		if (this.#gameMaster.getCurrentPlayer().getType() === "robot")
+		if (this.#gameMaster.getCurrentPlayer().getType() === "robot") {
 			this.#takeTurnRobot();
+		}
 	}
 
 	#renderCellStatus(missed, cell) {
@@ -112,6 +113,8 @@ class GameHandler {
 		const shipTypesLeft = Object.values(shipsLeft).map((ship) =>
 			ship._type.toLowerCase().replace(" ", "-"),
 		);
+
+		console.log(shipTypesLeft);
 
 		shipIndicators.forEach((ship) => {
 			if (!shipTypesLeft.includes(ship.classList[1]))
@@ -157,13 +160,12 @@ class GameHandler {
 		let pos;
 
 		setTimeout(() => {
-			while (!turnInfo?.success || !turnInfo) {
+			do {
 				pos = String(generateRandVal(99)).padStart(2, "0");
-				console.log("Generated random value: ", pos);
-
 				turnInfo = this.#gameMaster.takeTurn(pos);
-				console.log("Turn Info robot again: ", turnInfo);
-			}
+			} while (!turnInfo?.success || !turnInfo);
+
+			console.log("(Robot) turn info: ", turnInfo);
 
 			const cell = this.bodyEl.querySelector(
 				`.player-game-info:first-child .gameboard > .cell[data-position='${pos}']`,
@@ -184,7 +186,7 @@ class GameHandler {
 				const { position } = e.currentTarget.dataset;
 
 				const turnInfo = this.#gameMaster.takeTurn(position);
-				console.log("Turn info: ", turnInfo);
+				console.log("(Human) Turn info: ", turnInfo);
 				this.#updatePage(turnInfo, cell);
 
 				currentPlayerType = this.#gameMaster.getCurrentPlayer().getType();

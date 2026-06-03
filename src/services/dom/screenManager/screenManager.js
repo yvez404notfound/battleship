@@ -5,12 +5,12 @@ import PreparationHandler from "../preparationHandler/preparationHandler";
 
 class ScreenManager {
 	static #STATES = {
-		HOME: new HomepageHandler(),
-		PREPARATION: new PreparationHandler(),
-		GAME: new GameHandler(),
+		HOME: null,
+		PREPARATION: null,
+		GAME: null,
 	};
 
-	static currentState = ScreenManager.#STATES.HOME;
+	static currentState;
 
 	static #userData;
 	static #robotData;
@@ -26,6 +26,18 @@ class ScreenManager {
 
 		if (!stateKeys.includes(newState))
 			throw new Error("That state doesn't exists");
+
+		switch (newState) {
+			case "HOME":
+				this.#STATES.HOME = new HomepageHandler();
+				break;
+			case "PREPARATION":
+				this.#STATES.PREPARATION = new PreparationHandler();
+				break;
+			case "GAME":
+				this.#STATES.GAME = new GameHandler();
+				break;
+		}
 
 		ScreenManager.currentState = ScreenManager.#STATES[newState];
 

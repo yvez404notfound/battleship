@@ -15,4 +15,4 @@ import { convertAssetsToInlineSVG } from "./utils/asset.js";
 
 import ScreenManager from "./services/dom/screenManager/screenManager.js";
 
-ScreenManager.renderCurrentPage();
+ScreenManager.changeState("HOME");
