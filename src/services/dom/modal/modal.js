@@ -124,8 +124,8 @@ class Modal {
 					<span class="material-symbols-outlined filled"> flag </span>
 				</div>
 				<div class="header">
-					<h2>Battle Won!</h2>
-					<p>You destroyed all enemy ships.</p>
+					<h2>Forfeit Battle?</h2>
+					<p>We can always go back, Captain.</p>
 				</div>
 				<div class="buttons">
 					<button type="button" class="give-up error-btn-tonal">

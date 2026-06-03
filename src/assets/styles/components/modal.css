@@ -100,3 +100,15 @@ dialog.defeat-modal {
 		}
 	}
 }
+
+dialog.forfeit-modal {
+	> form {
+		> .icon > span {
+			color: rgb(var(--on-primary));
+		}
+
+		> .header > h2 {
+			color: rgb(var(--outline));
+		}
+	}
+}
