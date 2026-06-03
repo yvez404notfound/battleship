@@ -114,8 +114,6 @@ class GameHandler {
 			ship._type.toLowerCase().replace(" ", "-"),
 		);
 
-		console.log(shipTypesLeft);
-
 		shipIndicators.forEach((ship) => {
 			if (!shipTypesLeft.includes(ship.classList[1]))
 				ship.classList.replace("focused", "destroyed");

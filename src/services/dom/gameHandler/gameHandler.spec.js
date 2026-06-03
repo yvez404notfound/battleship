@@ -104,7 +104,6 @@ describe("Game Handler unit test", () => {
 
 	describe("renderPage() (First turn: Robot)", () => {
 		test("should take turn immediately if robot is the first turn", () => {
-			console.log("Robot first turn test");
 			const takeTurn = jest.spyOn(GameMaster.prototype, "takeTurn");
 
 			generateRandVal.mockReturnValueOnce(1);
@@ -188,6 +187,10 @@ describe("Game Handler unit test", () => {
 						targetCell4 = document.querySelector(
 							".player-game-info:last-child .gameboard > .cell[data-position='90']",
 						);
+
+						HTMLDialogElement.prototype.showModal = jest.fn();
+						HTMLDialogElement.prototype.close = jest.fn();
+						HTMLFormElement.prototype.requestSubmit = jest.fn();
 					});
 
 					describe("Update ship indicators if one ship got sunk", () => {
@@ -240,7 +243,50 @@ describe("Game Handler unit test", () => {
 
 						expect(document.body.innerHTML).toContain("winner-modal");
 					});
+
+					test("display defeat modal if robot player sunk all human player ships", () => {
+						const mockTargetCell = document.querySelector(
+							".player-game-info:last-child .gameboard > .cell[data-position='55']",
+						);
+
+						mockTargetCell.click();
+						jest.runOnlyPendingTimers();
+
+						generateRandVal.mockReturnValueOnce(1);
+
+						targetCell1.click();
+						jest.runOnlyPendingTimers();
+
+						generateRandVal.mockReturnValueOnce(88);
+
+						targetCell2.click();
+						jest.runOnlyPendingTimers();
+
+						generateRandVal.mockReturnValueOnce(89);
+
+						targetCell3.click();
+						jest.runOnlyPendingTimers();
+
+						generateRandVal.mockReturnValueOnce(90);
+
+						targetCell4.click();
+						jest.runOnlyPendingTimers();
+
+						expect(document.body.innerHTML).toContain("defeat-modal");
+					});
 				});
+			});
+		});
+
+		describe("Forfeit Button event", () => {
+			let forfeitBtn;
+
+			test("should render forfeit modal on click", () => {
+				forfeitBtn = document.querySelector(".forfeit-btn");
+
+				forfeitBtn.click();
+
+				expect(document.body.innerHTML).toContain("forfeit-modal");
 			});
 		});
 	});
