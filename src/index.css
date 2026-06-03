@@ -1,17 +1,34 @@
-.outline *,
-.outline {
-	border: 0.5px solid red;
-}
-
 :root {
-	--display-font: "Rubik Dirt";
-	--main-font: "Arimo";
 	--fallback-fonts:
 		system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif,
 		"Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 
+	/* Colors */
 	--success: 46 125 50;
 	--on-success: 255 255 255;
+	--gold: 255 215 0;
+
+	/* Screen sizes */
+	--sm: 40rem; /* 640px */
+	--md: 48rem; /* 768px */
+	--lg: 64rem; /* 1024px */
+	--xl: 80rem; /* 1280px */
+	--xl2: 96rem; /* 1536px */
+
+	/* Container sizes */
+	--c-xs3: 16rem; /* 258px */
+	--c-xs2: 18rem; /* 288px */
+	--c-xs: 20rem; /* 320px */
+	--c-sm: 24rem; /* 384px */
+	--c-md: 28rem; /* 448px */
+	--c-lg: 32rem; /* 512px */
+	--c-xl: 36rem; /* 578px */
+	--c-xl2: 42rem; /* 672px */
+	--c-xl3: 48rem; /* 768px */
+	--c-xl4: 56rem; /* 896px */
+	--c-xl5: 64rem; /* 1024px */
+	--c-xl6: 72rem; /* 1152px */
+	--c-xl7: 80rem; /* 1280px */
 
 	/* ---- Elevation styles ---- */
 	--elevation-1:
@@ -25,18 +42,46 @@
 	--elevation-5:
 		0px 8px 16px rgba(0, 0, 0, 0.16), 0px 14px 20px rgba(0, 0, 0, 0.12);
 
+	--display-font: "Rubik Dirt";
+	--main-font: "Arimo";
+}
+
+.material-symbols-outlined.filled {
+	font-variation-settings:
+		"FILL" 1,
+		"wght" 400,
+		"GRAD" 0,
+		"opsz" 24;
+}
+
+.outline *,
+.outline {
+	border: 0.5px solid red;
+}
+
+html {
 	font-family: var(--main-font), var(--fallback-fonts);
+}
+
+html,
+body {
 	color: rgb(var(--on-surface));
+	min-height: 100dvh;
 }
 
 body {
-	height: 100dvh;
 	background-color: rgb(var(--surface));
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	padding: 0 1rem;
 	overflow-y: scroll;
+
+	& > main {
+		flex: 1;
+	}
+
+	> *:not(footer) {
+		padding: 0 1rem;
+	}
 }
-/* ------------------------------------------- */

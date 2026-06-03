@@ -1,37 +1,54 @@
 button[class*="btn"] {
-  border-radius: 0.5rem;
-  font-weight: bold;
-  padding: 1rem 1.25rem;
-  width: fit-content;
-  display: flex;
-  gap: 0.5rem;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  transition:
-    background-color 0.3s ease-in-out,
-    transform 0.3s ease-in;
+	border-radius: 0.5rem;
+	font-weight: bold;
+	padding: 1rem 1.25rem;
+	width: fit-content;
+	display: flex;
+	gap: 0.5rem;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+	transition:
+		background-color 0.2s ease-in-out,
+		transform 0.1s ease-in;
 }
 
 button[class*="btn"]:hover {
-  transform: scale(1.01);
+	transform: scale(1.01);
 }
 
 .primary-btn-filled {
-  background-color: rgb(var(--primary));
-  color: rgb(var(--on-primary));
+	background-color: rgb(var(--primary));
+	color: rgb(var(--on-primary));
 }
 
 .primary-btn-filled:hover {
-  background-color: hsl(from rgb(var(--primary)) h s 10%);
+	background-color: hsl(from rgb(var(--primary)) h s 10%);
 }
 
 .secondary-btn-filled {
-  background-color: rgb(var(--secondary));
-  color: rgb(var(--on-secondary));
+	background-color: rgb(var(--secondary));
+	color: rgb(var(--on-secondary));
+}
+
+.secondary-btn-filled:hover {
+	background-color: hsl(from rgb(var(--secondary)) h s 20%);
+}
+
+.error-btn-filled {
+	background-color: rgb(var(--error));
+	color: rgb(var(--on-error));
+}
+
+.error-btn-filled:hover {
+	background-color: hsl(from rgb(var(--error)) h s 30%);
 }
 
 .error-btn-tonal {
-  background-color: rgb(var(--error-container));
-  color: rgb(var(--on-error-container));
+	background-color: rgb(var(--error-container));
+	color: rgb(var(--on-error-container));
+}
+
+.error-btn-tonal:hover {
+	background-color: hsl(from rgb(var(--error-container)) h s 80%);
 }

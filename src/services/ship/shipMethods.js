@@ -1,29 +1,19 @@
 const hit = (state) => ({
 	hit() {
-		state.length = state.length - 1;
+		state._length = state._length - 1;
+	},
+});
+
+const getHP = (state) => ({
+	getHP() {
+		return state._length;
 	},
 });
 
 const isSunk = (state) => ({
 	isSunk() {
-		return state.length < 1;
+		return state._length < 1;
 	},
 });
 
-const setCoordinates = (state) => ({
-	setCoordinates(cellCoordinates) {
-		state.coordinates = cellCoordinates;
-
-		state.coordinates.forEach((cell) => {
-			cell.setOccupiedByShip(this);
-		});
-	},
-});
-
-const showCoordinates = (state) => ({
-	showCoordinates() {
-		return state.coordinates;
-	},
-});
-
-export { hit, isSunk, setCoordinates, showCoordinates };
+export { getHP, hit, isSunk };

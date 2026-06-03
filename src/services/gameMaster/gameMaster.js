@@ -5,92 +5,99 @@ import {
 	createRobotPlayer,
 } from "../player/playerFactory.js";
 
-const mockPlayerShipData = {
-	aircraftCarrier: ["00", "01", "02", "03", "04"],
-	battleship: ["10", "11", "12", "13"],
-	cruiser: ["20", "21", "22"],
-	submarine: ["30", "31", "32"],
-	destroyer: ["40", "41"],
-};
-
 class GameMaster {
-	players = [];
-	currentTurnPlayer;
-	turnValue;
+	#players = [];
+	#playerInCurrentTurn;
+	#turnValue;
 
-	initGame = function (playerName, humanPlayerShipsData, robotPlayerShipsData) {
-		const { humanPlayer, robotPlayer } = this.initPlayers(
-			playerName,
-			humanPlayerShipsData,
-			robotPlayerShipsData,
-		);
-
-		this.decideWhosTurn();
-	};
-
-	initPlayers = function (
-		playerName,
-		humanPlayerShipsData,
-		robotPlayerShipsData,
-	) {
+	initPlayers(playerName, humanPlayerShipsData, robotPlayerShipsData) {
 		const humanPlayer = createHumanPlayer(playerName, new Gameboard());
+
 		humanPlayer.initShips(humanPlayerShipsData);
 
 		const robotPlayer = createRobotPlayer(new Gameboard());
+
 		robotPlayer.initShips(robotPlayerShipsData);
 
-		this.players = [humanPlayer, robotPlayer];
+		this.#players = [humanPlayer, robotPlayer];
 
 		return {
 			humanPlayer,
 			robotPlayer,
 		};
-	};
+	}
 
-	decideWhosTurn = function () {
-		const value = generateRandVal(this.players.length - 1);
+	decideWhosTurn() {
+		const value = generateRandVal(this.#players.length - 1);
 
-		const player = this.getPlayer(value);
+		const player = this.#players[value];
 
-		this.currentTurnPlayer = player;
-		return (this.turnValue = value);
-	};
+		this.#playerInCurrentTurn = player;
+		return (this.#turnValue = value);
+	}
 
-	switchTurn = function () {
-		this.turnValue = this.turnValue === 0 ? 1 : 0;
-		this.currentTurnPlayer = this.getPlayer(this.turnValue);
-		return this.turnValue;
-	};
+	initGame(userData, robotData) {
+		this.initPlayers(userData.name, userData.shipsData, robotData.shipsData);
+		this.decideWhosTurn();
+	}
 
-	startTurn = function (position, enemyGameboard) {
-		this.currentTurnPlayer.attack(position, enemyGameboard);
-		this.switchTurn();
-	};
+	getEnemyPlayer() {
+		const pl =
+			this.#players[this.#playerInCurrentTurn.getType() === "robot" ? 0 : 1];
 
-	getPlayer = function (index) {
-		return this.players[index];
-	};
+		return pl;
+	}
 
-	getPlayers = function () {
-		return this.players;
-	};
+	didAttackMissed(position, enemyGameboard) {
+		const attackedCell = enemyGameboard.getCell(position);
+		return attackedCell.isOccupied() ? false : true;
+	}
+
+	switchTurn() {
+		this.#turnValue = this.#turnValue === 0 ? 1 : 0;
+
+		this.#playerInCurrentTurn = this.#players[this.#turnValue];
+
+		return this.#turnValue;
+	}
+
+	checkWinner() {
+		const enemyPlayer = this.getEnemyPlayer();
+
+		return enemyPlayer.isDead() ? this.#playerInCurrentTurn : null;
+	}
+
+	takeTurn(position) {
+		const enemyGameboard = this.getEnemyPlayer().getGameboard();
+
+		if (this.#playerInCurrentTurn.isPositionAttacked(position))
+			return {
+				success: false,
+				missed: this.didAttackMissed(position, enemyGameboard),
+				message: "already_attacked",
+			};
+
+		this.#playerInCurrentTurn.attack(position, enemyGameboard);
+
+		const missed = this.didAttackMissed(position, enemyGameboard);
+
+		const winner = this.checkWinner();
+		if (!winner) this.switchTurn();
+
+		return {
+			success: true,
+			missed,
+			winner,
+		};
+	}
+
+	getCurrentPlayer() {
+		return this.#playerInCurrentTurn;
+	}
+
+	getPlayers() {
+		return this.#players;
+	}
 }
-
-/*
-const gamemasterTest = new GameMaster();
-gamemasterTest.initPlayers("Yves", mockPlayerShipData, mockPlayerShipData);
-// gamemasterTest.decideWhosTurn();
-gamemasterTest.currentTurnPlayer = gamemasterTest.getPlayer(0);
-
-const enemyGameboard = gamemasterTest.getPlayer(1).gameboard;
-console.log("Enemy gameboard ", enemyGameboard.board[0][0]);
-
-// debugger;
-gamemasterTest.startTurn("00", enemyGameboard);
-
-console.log("Current Game Status: ", gamemasterTest);
-
-// console.log(gamemasterTest.decideWhosTurn());
-*/
 
 export default GameMaster;

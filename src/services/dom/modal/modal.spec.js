@@ -1,0 +1,182 @@
+/**
+ * @jest-environment jsdom
+ */
+
+import ScreenManager from "../screenManager/screenManager.js";
+import Modal from "./modal.js";
+
+//#region  Mocks
+jest.mock("../../../utils/asset.js");
+const winnerModalUI = `
+		<dialog class="winner-modal">
+			<div class="icon" aria-hidden="true">
+				<span class="material-symbols-outlined"> military_tech </span>
+			</div>
+			<div class="header">
+				<h2>Battle Won!</h2>
+				<p>You destroyed all enemy ships.</p>
+			</div>
+			<div class="buttons">
+				<button class="error-btn-tonal">
+					<span class="material-symbols-outlined"> anchor </span>
+					<p>Give Up</p>
+				</button>
+				<button class="primary-btn-filled">
+					<span class="material-symbols-outlined"> directions_boat </span>
+					<p>Try Again</p>
+				</button>
+			</div>
+		</dialog>
+`;
+const defeatModalUI = `
+		<dialog class="defeat-modal">
+			<div class="icon" aria-hidden="true">
+				<img
+					class="svg"
+					src="./assets/imgs/game-over.svg"
+					alt="Skull and Bones icon" />
+			</div>
+			<div class="header">
+				<h2>Battle Lost.</h2>
+				<p>The enemy have destroyed all your ships.</p>
+			</div>
+			<div class="buttons">
+				<button class="error-btn-tonal">
+					<span class="material-symbols-outlined"> anchor </span>
+					<p>Give Up</p>
+				</button>
+				<button class="primary-btn-filled">
+					<span class="material-symbols-outlined"> directions_boat </span>
+					<p>Try Again</p>
+				</button>
+			</div>
+		</dialog>
+`;
+//#endregion
+
+//#region Unit Test
+describe("Modal class unit test", () => {
+	let modal;
+	let changeState;
+
+	beforeEach(() => {
+		modal = new Modal();
+		changeState = jest.spyOn(ScreenManager, "changeState");
+
+		HTMLDialogElement.prototype.showModal = jest.fn();
+		HTMLDialogElement.prototype.close = jest.fn();
+		HTMLFormElement.prototype.requestSubmit = jest.fn();
+
+		jest.clearAllMocks();
+	});
+
+	afterEach(() => {
+		jest.restoreAllMocks();
+	});
+
+	describe("renderWinnerModal()", () => {
+		beforeEach(() => {
+			modal.renderWinnerModal();
+		});
+
+		test("should render winner modal UI", () => {
+			expect(document.body.innerHTML).toContain("winner-modal");
+		});
+
+		describe("DOM events", () => {
+			describe("Give Up button", () => {
+				test("should navigate to homepage", () => {
+					const giveUpBtn = document.querySelector("button.give-up");
+					giveUpBtn.click();
+
+					expect(changeState).toHaveBeenCalledWith("HOME");
+					expect(document.body.classList.contains("start")).toBeTruthy();
+				});
+			});
+
+			describe("Try Again button", () => {
+				test("should navigate to preparation page", () => {
+					const tryAgain = document.querySelector("button.try-again");
+					tryAgain.click();
+
+					expect(changeState).toHaveBeenCalledWith("PREPARATION");
+					expect(document.body.classList.contains("preparation")).toBeTruthy();
+				});
+			});
+		});
+	});
+
+	describe("renderDefeatModal()", () => {
+		beforeEach(() => {
+			modal.renderDefeatModal();
+		});
+
+		test("should render defeat modal UI", () => {
+			expect(document.body.innerHTML).toContain("defeat-modal");
+		});
+
+		describe("DOM events", () => {
+			describe("Give Up button", () => {
+				test("should navigate to homepage", () => {
+					const giveUpBtn = document.querySelector("button.give-up");
+					giveUpBtn.click();
+
+					expect(changeState).toHaveBeenCalledWith("HOME");
+					expect(document.body.classList.contains("start")).toBeTruthy();
+				});
+			});
+
+			describe("Try Again button", () => {
+				test("should navigate to preparation page", () => {
+					const tryAgain = document.querySelector("button.try-again");
+					tryAgain.click();
+
+					expect(changeState).toHaveBeenCalledWith("PREPARATION");
+					expect(document.body.classList.contains("preparation")).toBeTruthy();
+				});
+			});
+		});
+	});
+
+	describe("renderForfeitModal()", () => {
+		beforeEach(() => {
+			modal.renderForfeitModal();
+		});
+
+		test("should render forfeit modal UI", () => {
+			expect(document.body.innerHTML).toContain("forfeit-modal");
+		});
+
+		describe("DOM events", () => {
+			describe("Give Up button", () => {
+				test("should navigate to homepage", () => {
+					const giveUpBtn = document.querySelector("button.give-up");
+					giveUpBtn.click();
+
+					expect(changeState).toHaveBeenCalledWith("HOME");
+					expect(document.body.classList.contains("start")).toBeTruthy();
+				});
+			});
+
+			describe("Try Again button", () => {
+				test("should navigate to preparation page", () => {
+					const tryAgain = document.querySelector("button.try-again");
+					tryAgain.click();
+
+					expect(changeState).toHaveBeenCalledWith("PREPARATION");
+					expect(document.body.classList.contains("preparation")).toBeTruthy();
+				});
+			});
+
+			describe("Close button", () => {
+				test("should close the modal", () => {
+					const closeModalBtn = document.querySelector("button.close-modal");
+					closeModalBtn.click();
+
+					expect(HTMLDialogElement.prototype.close).toHaveBeenCalled();
+				});
+			});
+		});
+	});
+});
+//#endregion

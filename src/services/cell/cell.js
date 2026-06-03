@@ -1,18 +1,31 @@
 class Cell {
-	isHit = false;
-	occupiedByShip;
+	#isHit = false;
+	#occupiedByShip;
+	#position;
 
 	constructor(position, occupiedByShip) {
-		this.position = position;
-		this.occupiedByShip = occupiedByShip;
+		this.#position = position;
+		this.#occupiedByShip = occupiedByShip;
 	}
 
 	setOccupiedByShip(ship) {
-		this.occupiedByShip = ship;
+		this.#occupiedByShip = ship;
+	}
+
+	getOccupiedByShip() {
+		return this.#occupiedByShip;
 	}
 
 	takeHit() {
-		this.isHit = true;
+		this.#isHit = true;
+	}
+
+	getIsHit() {
+		return this.#isHit;
+	}
+
+	isOccupied() {
+		return this.#occupiedByShip ? true : false;
 	}
 }
 

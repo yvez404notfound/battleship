@@ -7,14 +7,11 @@ describe("Cell class unit test", () => {
 
 	test("should be able to occupy by ship", () => {
 		testCell.setOccupiedByShip(createSubmarine());
-
-		expect(testCell.occupiedByShip).toBeInstanceOf(Ship);
-		expect(testCell.occupiedByShip.type).toBe("Submarine");
+		expect(testCell.isOccupied()).toBeTruthy();
 	});
 
-	test("should take a hit when attacked", () => {
+	test("should be able to get hit", () => {
 		testCell.takeHit();
-
-		expect(testCell.isHit).toBeTruthy();
+		expect(testCell.getIsHit()).toBeTruthy();
 	});
 });
